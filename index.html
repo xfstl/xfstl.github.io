@@ -1,123 +1,123 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="xfstl — Developer portfolio and open source projects">
-  <meta name="theme-color" content="#0f1419">
-  <title>xfstl</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello World</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            min-height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'SF Pro Display', -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            overflow: hidden;
+        }
+        /* 背景星星 */
+        .stars {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+        }
+        .star {
+            position: absolute;
+            background: #fff;
+            border-radius: 50%;
+            animation: twinkle var(--dur) ease-in-out infinite;
+            animation-delay: var(--delay);
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.8); }
+        }
+        /* 主卡片 */
+        .card {
+            position: relative; z-index: 1;
+            background: rgba(255,255,255,0.04);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 24px; padding: 4rem 5rem;
+            text-align: center;
+            animation: float 6s ease-in-out infinite;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .wave { font-size: 3rem; margin-bottom: 0.5rem; animation: bounce 1.5s ease-in-out infinite; }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        h1 {
+            font-size: 4rem; font-weight: 800; margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 40%, #fda085 70%, #ffe29f 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-size: 300% 300%;
+            animation: gradient 4s ease infinite;
+        }
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .subtitle {
+            font-size: 1.3rem; color: rgba(255,255,255,0.6);
+            letter-spacing: 3px; margin-bottom: 2rem;
+        }
+        .divider {
+            width: 60px; height: 3px;
+            background: linear-gradient(90deg, #f093fb, #f5576c);
+            margin: 0 auto 2rem; border-radius: 2px;
+        }
+        .info {
+            color: rgba(255,255,255,0.5); font-size: 0.95rem;
+            line-height: 2; letter-spacing: 1px;
+        }
+        .info span { color: #fda085; font-weight: 600; }
+        .glow {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 300px; height: 300px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(240,147,251,0.15) 0%, transparent 70%);
+            pointer-events: none; z-index: 0;
+        }
+    </style>
 </head>
 <body>
-  <div class="bg-gradient" aria-hidden="true"></div>
+    <!-- 星星背景 -->
+    <div class="stars" id="stars"></div>
 
-  <header class="site-header">
-    <nav class="nav container">
-      <a href="#" class="logo">xfstl</a>
-      <ul class="nav-links">
-        <li><a href="#projects">Projects</a></li>
-        <li><a href="#about">About</a></li>
-        <li><a href="https://github.com/xfstl" target="_blank" rel="noopener noreferrer">GitHub</a></li>
-      </ul>
-      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-        <svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
-        </svg>
-        <svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-        </svg>
-      </button>
-    </nav>
-  </header>
+    <!-- 光晕 -->
+    <div class="glow"></div>
 
-  <main>
-    <section class="hero container">
-      <div class="hero-content">
-        <img
-          src="https://avatars.githubusercontent.com/u/20047264?v=4"
-          alt="xfstl avatar"
-          class="avatar"
-          width="120"
-          height="120"
-        >
-        <h1 class="hero-title">
-          Hi, I'm <span class="highlight">xfstl</span>
-        </h1>
-        <p class="hero-subtitle">
-          Developer · Open Source Enthusiast
+    <!-- 卡片 -->
+    <div class="card">
+        <div class="wave">👋</div>
+        <h1>Hello World</h1>
+        <p class="subtitle">· 你好，世界 ·</p>
+        <div class="divider"></div>
+        <p class="info">
+            Deployed by <span>Wen Yanbiao</span><br>
+            via GitHub Pages 🚀
         </p>
-        <p class="hero-desc">
-          Building tools for iOS and beyond. Passionate about clean code,
-          useful utilities, and sharing knowledge through open source.
-        </p>
-        <div class="hero-actions">
-          <a href="#projects" class="btn btn-primary">View Projects</a>
-          <a href="https://github.com/xfstl" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.395-.135-.345-.72-1.395-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
-            </svg>
-            GitHub
-          </a>
-        </div>
-      </div>
-      <div class="hero-stats">
-        <div class="stat">
-          <span class="stat-value" id="repoCount">—</span>
-          <span class="stat-label">Repositories</span>
-        </div>
-        <div class="stat">
-          <span class="stat-value" id="followerCount">—</span>
-          <span class="stat-label">Followers</span>
-        </div>
-        <div class="stat">
-          <span class="stat-value">2016</span>
-          <span class="stat-label">Since</span>
-        </div>
-      </div>
-    </section>
-
-    <section id="projects" class="section container">
-      <div class="section-header">
-        <h2 class="section-title">Projects</h2>
-        <p class="section-desc">Open source repositories and side projects</p>
-      </div>
-      <div class="projects-grid" id="projectsGrid">
-        <div class="project-skeleton"></div>
-        <div class="project-skeleton"></div>
-        <div class="project-skeleton"></div>
-      </div>
-    </section>
-
-    <section id="about" class="section container">
-      <div class="section-header">
-        <h2 class="section-title">About</h2>
-      </div>
-      <div class="about-card">
-        <p>
-          I'm a developer with a focus on <strong>iOS</strong> and mobile applications.
-          My work spans RSS readers, image processing tools, and educational resources.
-        </p>
-        <ul class="tech-list">
-          <li>Swift / Objective-C</li>
-          <li>UIKit</li>
-          <li>ReactiveCocoa</li>
-          <li>FMDB</li>
-        </ul>
-      </div>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    <div class="container footer-inner">
-      <p>&copy; <span id="year"></span> xfstl</p>
-      <a href="https://github.com/xfstl/xfstl.github.io" target="_blank" rel="noopener noreferrer">View source</a>
     </div>
-  </footer>
 
-  <script src="assets/js/main.js"></script>
+    <script>
+        // 生成星星
+        const stars = document.getElementById('stars');
+        for (let i = 0; i < 80; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            const size = Math.random() * 3 + 1;
+            star.style.cssText = `
+                width: ${size}px; height: ${size}px;
+                top: ${Math.random() * 100}%;
+                left: ${Math.random() * 100}%;
+                --dur: ${Math.random() * 3 + 2}s;
+                --delay: ${Math.random() * 3}s;
+            `;
+            stars.appendChild(star);
+        }
+    </script>
 </body>
 </html>
