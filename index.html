@@ -2,20 +2,27 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#4a2c7a">
     <title>Ziang的数学小测试</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html { -webkit-text-size-adjust: 100%; }
         body {
             min-height: 100vh;
-            display: flex; align-items: center; justify-content: center;
+            min-height: 100dvh;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
             font-family: 'SF Pro Display', -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
             background: linear-gradient(160deg, #1a1a4e 0%, #4a2c7a 40%, #ff6b9d 100%);
-            padding: 1rem;
+            padding: max(1rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right))
+                     max(1rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
+            overflow-x: hidden;
+            touch-action: manipulation;
         }
-        .stars {
-            position: fixed; inset: 0; pointer-events: none; z-index: 0;
-        }
+        .app { width: 100%; max-width: 480px; position: relative; }
+
+        .stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
         .star {
             position: absolute; background: #fff; border-radius: 50%;
             animation: twinkle var(--dur) ease-in-out infinite;
@@ -25,16 +32,32 @@
             0%, 100% { opacity: 0.3; transform: scale(1); }
             50% { opacity: 1; transform: scale(1.5); }
         }
-        .card {
+
+        .screen {
             position: relative; z-index: 1;
-            background: rgba(255,255,255,0.95);
+            background: rgba(255,255,255,0.97);
             border-radius: 28px;
-            padding: 2.5rem 2rem;
-            width: 100%; max-width: 480px;
+            padding: 2rem 1.5rem;
             box-shadow: 0 20px 60px rgba(0,0,0,0.25);
             text-align: center;
+            display: none;
+            opacity: 0;
+            transform: translateY(16px) scale(0.98);
         }
-        .hidden { display: none !important; }
+        .screen.active {
+            display: block;
+            animation: screenIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        .screen.leaving {
+            display: block;
+            animation: screenOut 0.3s ease forwards;
+        }
+        @keyframes screenIn {
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes screenOut {
+            to { opacity: 0; transform: translateY(-12px) scale(0.98); }
+        }
 
         /* 欢迎页 */
         .mascot { font-size: 4rem; margin-bottom: 0.5rem; animation: wiggle 2s ease-in-out infinite; }
@@ -43,14 +66,12 @@
             50% { transform: rotate(5deg); }
         }
         .title {
-            font-size: 2rem; font-weight: 800; margin-bottom: 0.25rem;
+            font-size: clamp(1.5rem, 5vw, 2rem); font-weight: 800; margin-bottom: 0.25rem;
             background: linear-gradient(135deg, #ff6b9d, #c44dff, #4dabf7);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-        .tagline {
-            color: #888; font-size: 1rem; margin-bottom: 1.5rem;
-        }
+        .tagline { color: #888; font-size: 1rem; margin-bottom: 1.25rem; }
         .rules {
             background: #fff5f8; border-radius: 16px; padding: 1rem 1.25rem;
             text-align: left; margin-bottom: 1.5rem; color: #666; font-size: 0.95rem; line-height: 1.8;
@@ -59,140 +80,254 @@
 
         /* 按钮 */
         .btn {
-            display: inline-block; border: none; cursor: pointer;
-            font-family: inherit; font-size: 1.1rem; font-weight: 700;
-            padding: 0.85rem 2.5rem; border-radius: 999px;
+            display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;
+            border: none; cursor: pointer; font-family: inherit;
+            font-size: 1.05rem; font-weight: 700;
+            padding: 0.95rem 2rem; min-height: 52px; border-radius: 999px;
             transition: transform 0.15s, box-shadow 0.15s;
+            width: 100%; max-width: 280px;
         }
         .btn:active { transform: scale(0.96); }
         .btn-primary {
             background: linear-gradient(135deg, #ff6b9d, #c44dff);
-            color: #fff;
-            box-shadow: 0 6px 20px rgba(196,77,255,0.4);
+            color: #fff; box-shadow: 0 6px 20px rgba(196,77,255,0.4);
         }
-        .btn-primary:hover { box-shadow: 0 8px 28px rgba(196,77,255,0.5); }
-        .btn-secondary {
-            background: #f0f0f5; color: #555; margin-top: 0.75rem;
-        }
+        .btn-secondary { background: #f0f0f5; color: #555; margin-top: 0.75rem; }
 
         /* 答题页 */
-        .progress-bar {
-            display: flex; gap: 6px; justify-content: center; margin-bottom: 1.25rem;
+        .quiz-header { margin-bottom: 1.25rem; }
+        .quiz-meta {
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 0.9rem; color: #888; margin-bottom: 0.5rem; font-weight: 600;
         }
-        .progress-dot {
-            width: 28px; height: 28px; border-radius: 50%;
-            background: #eee; font-size: 0.75rem; font-weight: 700;
-            display: flex; align-items: center; justify-content: center;
-            color: #bbb; transition: all 0.3s;
+        .streak { color: #ff922b; min-height: 1.2rem; font-size: 0.85rem; }
+        .streak.show { animation: popIn 0.4s cubic-bezier(0.22, 1, 0.36, 1); }
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            70% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
         }
-        .progress-dot.done { background: #ffd43b; color: #fff; }
-        .progress-dot.current { background: linear-gradient(135deg, #ff6b9d, #c44dff); color: #fff; transform: scale(1.15); }
+        .progress-track {
+            height: 10px; background: #eee; border-radius: 999px; overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%; width: 0%;
+            background: linear-gradient(90deg, #ff6b9d, #c44dff, #ffd43b);
+            border-radius: 999px;
+            transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+        }
 
-        .question-emoji { font-size: 3rem; margin-bottom: 0.5rem; }
+        .question-box { min-height: 180px; display: flex; flex-direction: column; justify-content: center; }
+        .question-box.animate-in { animation: qSlideIn 0.4s cubic-bezier(0.22, 1, 0.36, 1); }
+        @keyframes qSlideIn {
+            from { opacity: 0; transform: translateX(24px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .question-emoji {
+            font-size: 3.5rem; margin-bottom: 0.5rem;
+            animation: emojiPop 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        @keyframes emojiPop {
+            0% { transform: scale(0); }
+            70% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
         .question-text {
-            font-size: 1.25rem; color: #333; line-height: 1.7;
-            margin-bottom: 1.5rem; min-height: 3.5rem;
+            font-size: 1.15rem; color: #333; line-height: 1.7; margin-bottom: 1.25rem;
         }
         .question-text .nums {
-            font-size: 2rem; font-weight: 800; color: #c44dff;
+            display: block; margin-top: 0.5rem;
+            font-size: clamp(1.75rem, 7vw, 2.25rem); font-weight: 800; color: #c44dff;
+            letter-spacing: 1px;
         }
-        .answer-row {
-            display: flex; gap: 0.75rem; justify-content: center; align-items: center;
-        }
+
+        .answer-area { margin-top: 0.5rem; }
         .answer-input {
-            width: 120px; height: 64px; font-size: 2rem; font-weight: 800;
-            text-align: center; border: 3px solid #e0e0e0; border-radius: 16px;
-            outline: none; color: #c44dff; transition: border-color 0.2s;
+            width: 100%; max-width: 200px; height: 72px;
+            font-size: 2rem; font-weight: 800;
+            text-align: center; border: 3px solid #e0e0e0; border-radius: 20px;
+            outline: none; color: #c44dff;
+            transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+            margin-bottom: 1rem;
         }
-        .answer-input:focus { border-color: #c44dff; }
-        .hint { color: #aaa; font-size: 0.85rem; margin-top: 1rem; }
+        .answer-input:focus {
+            border-color: #c44dff;
+            box-shadow: 0 0 0 4px rgba(196,77,255,0.15);
+        }
+        .answer-input.shake { animation: shake 0.45s ease; }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+        }
+        .answer-input.correct-flash {
+            border-color: #51cf66;
+            box-shadow: 0 0 0 4px rgba(81,207,102,0.2);
+            animation: correctPulse 0.5s ease;
+        }
+        @keyframes correctPulse {
+            50% { transform: scale(1.05); }
+        }
+        .hint { color: #aaa; font-size: 0.85rem; margin-top: 0.75rem; min-height: 1.2rem; }
+
+        /* 即时反馈浮层 */
+        .feedback {
+            position: fixed; inset: 0; z-index: 200;
+            display: flex; align-items: center; justify-content: center;
+            pointer-events: none; opacity: 0;
+        }
+        .feedback.show { animation: feedbackIn 0.55s ease forwards; }
+        @keyframes feedbackIn {
+            0% { opacity: 0; }
+            15% { opacity: 1; }
+            85% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+        .feedback-bubble {
+            background: #fff; border-radius: 24px; padding: 1.5rem 2.5rem;
+            box-shadow: 0 16px 48px rgba(0,0,0,0.2);
+            transform: scale(0.5);
+            animation: bubblePop 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        @keyframes bubblePop {
+            0% { transform: scale(0.5); }
+            50% { transform: scale(1.08); }
+            100% { transform: scale(1); }
+        }
+        .feedback-emoji { font-size: 3rem; }
+        .feedback-text { font-size: 1.2rem; font-weight: 700; margin-top: 0.25rem; }
+        .feedback.correct .feedback-text { color: #51cf66; }
+        .feedback.wrong .feedback-text { color: #ff922b; }
 
         /* 结果页 */
         .score-circle {
-            width: 120px; height: 120px; border-radius: 50%;
+            width: 130px; height: 130px; border-radius: 50%;
             background: linear-gradient(135deg, #ffd43b, #ff922b);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             margin: 0 auto 1rem;
             box-shadow: 0 8px 24px rgba(255,146,43,0.35);
+            animation: scoreBounce 0.7s cubic-bezier(0.22, 1, 0.36, 1);
         }
-        .score-num { font-size: 2.5rem; font-weight: 800; color: #fff; line-height: 1; }
+        @keyframes scoreBounce {
+            0% { transform: scale(0); }
+            60% { transform: scale(1.12); }
+            100% { transform: scale(1); }
+        }
+        .score-num { font-size: 2.75rem; font-weight: 800; color: #fff; line-height: 1; }
         .score-label { font-size: 0.85rem; color: rgba(255,255,255,0.9); }
-        .encourage-emoji { font-size: 2.5rem; margin-bottom: 0.25rem; }
+        .encourage-emoji { font-size: 2.5rem; margin-bottom: 0.25rem; animation: emojiPop 0.6s ease 0.3s both; }
         .encourage-text {
-            font-size: 1.1rem; color: #555; line-height: 1.6; margin-bottom: 1.25rem;
+            font-size: 1.05rem; color: #555; line-height: 1.6; margin-bottom: 1.25rem;
+            animation: screenIn 0.5s ease 0.4s both;
         }
         .details {
-            text-align: left; max-height: 260px; overflow-y: auto;
+            text-align: left; max-height: min(40vh, 280px); overflow-y: auto;
             border-radius: 16px; background: #f8f8fc; padding: 0.75rem;
-            margin-bottom: 1.25rem;
+            margin-bottom: 1.25rem; -webkit-overflow-scrolling: touch;
         }
         .detail-item {
             display: flex; align-items: flex-start; gap: 0.5rem;
-            padding: 0.6rem 0.5rem; border-bottom: 1px solid #eee;
+            padding: 0.65rem 0.5rem; border-bottom: 1px solid #eee;
             font-size: 0.9rem; color: #444;
+            opacity: 0; transform: translateX(-8px);
+            animation: detailIn 0.35s ease forwards;
+        }
+        @keyframes detailIn {
+            to { opacity: 1; transform: translateX(0); }
         }
         .detail-item:last-child { border-bottom: none; }
         .detail-num { font-weight: 700; color: #c44dff; min-width: 1.5rem; }
         .detail-q { flex: 1; line-height: 1.5; }
         .detail-ans { font-size: 0.82rem; color: #888; margin-top: 2px; }
-        .detail-mark { font-size: 1.2rem; }
+        .detail-mark { font-size: 1.2rem; flex-shrink: 0; }
         .detail-mark.correct { color: #51cf66; }
         .detail-mark.wrong { color: #ff6b6b; }
 
+        .btn-group { display: flex; flex-direction: column; align-items: center; }
+
         .footer-note {
-            margin-top: 1.5rem; font-size: 0.8rem; color: rgba(255,255,255,0.6);
-            text-align: center; position: relative; z-index: 1;
+            margin-top: 1rem; font-size: 0.8rem; color: rgba(255,255,255,0.6);
+            text-align: center;
         }
 
+        /* 彩纸 */
+        #confetti { position: fixed; inset: 0; pointer-events: none; z-index: 300; }
+
         @media (max-width: 480px) {
-            .card { padding: 2rem 1.25rem; }
-            .title { font-size: 1.6rem; }
-            .question-text .nums { font-size: 1.6rem; }
+            .screen { padding: 1.75rem 1.25rem; border-radius: 22px; }
+            .question-emoji { font-size: 3rem; }
+            .btn { max-width: 100%; }
+            .feedback-bubble { padding: 1.25rem 2rem; margin: 0 1rem; }
         }
     </style>
 </head>
 <body>
-    <div class="stars" id="stars"></div>
+    <div class="app">
+        <div class="stars" id="stars"></div>
 
-    <!-- 欢迎页 -->
-    <div class="card" id="welcome">
-        <div class="mascot">🧮</div>
-        <h1 class="title">Ziang的数学小测试</h1>
-        <p class="tagline">一起来挑战加减法吧！</p>
-        <ul class="rules">
-            <li>一共 <strong>10</strong> 道一百以内的加减题</li>
-            <li>每题 <strong>10</strong> 分，满分 <strong>100</strong> 分</li>
-            <li>答完可以看到分数和每道题详情哦 ✨</li>
-        </ul>
-        <button class="btn btn-primary" id="startBtn">开始挑战 🚀</button>
-    </div>
-
-    <!-- 答题页 -->
-    <div class="card hidden" id="quiz">
-        <div class="progress-bar" id="progressBar"></div>
-        <div class="question-emoji" id="qEmoji"></div>
-        <p class="question-text" id="qText"></p>
-        <div class="answer-row">
-            <input type="number" class="answer-input" id="answerInput" inputmode="numeric" placeholder="?" autocomplete="off">
-            <button class="btn btn-primary" id="nextBtn">下一题 ➡️</button>
+        <!-- 欢迎页 -->
+        <div class="screen active" id="welcome">
+            <div class="mascot">🧮</div>
+            <h1 class="title">Ziang的数学小测试</h1>
+            <p class="tagline">一起来挑战加减法吧！</p>
+            <ul class="rules">
+                <li>一共 <strong>10</strong> 道一百以内的加减题</li>
+                <li>每题 <strong>10</strong> 分，满分 <strong>100</strong> 分</li>
+                <li>答完可以看到分数和每道题详情哦 ✨</li>
+            </ul>
+            <button class="btn btn-primary" id="startBtn">开始挑战 🚀</button>
         </div>
-        <p class="hint" id="hintText">想一想再填答案吧～</p>
-    </div>
 
-    <!-- 结果页 -->
-    <div class="card hidden" id="result">
-        <div class="score-circle">
-            <span class="score-num" id="scoreNum">0</span>
-            <span class="score-label">分</span>
+        <!-- 答题页 -->
+        <div class="screen" id="quiz">
+            <div class="quiz-header">
+                <div class="quiz-meta">
+                    <span id="quizProgress">第 1 / 10 题</span>
+                    <span class="streak" id="streak"></span>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+            <div class="question-box animate-in" id="questionBox">
+                <div class="question-emoji" id="qEmoji"></div>
+                <p class="question-text" id="qText"></p>
+            </div>
+            <div class="answer-area">
+                <input type="number" class="answer-input" id="answerInput"
+                       inputmode="numeric" pattern="[0-9]*" placeholder="?" autocomplete="off">
+                <button class="btn btn-primary" id="nextBtn">下一题 ➡️</button>
+                <p class="hint" id="hintText">想一想再填答案吧～</p>
+            </div>
         </div>
-        <div class="encourage-emoji" id="encourageEmoji"></div>
-        <p class="encourage-text" id="encourageText"></p>
-        <div class="details" id="detailsList"></div>
-        <button class="btn btn-primary" id="retryBtn">再来一次 🔄</button>
-        <button class="btn btn-secondary" id="homeBtn">返回首页</button>
+
+        <!-- 结果页 -->
+        <div class="screen" id="result">
+            <div class="score-circle">
+                <span class="score-num" id="scoreNum">0</span>
+                <span class="score-label">分</span>
+            </div>
+            <div class="encourage-emoji" id="encourageEmoji"></div>
+            <p class="encourage-text" id="encourageText"></p>
+            <div class="details" id="detailsList"></div>
+            <div class="btn-group">
+                <button class="btn btn-primary" id="retryBtn">再来一次 🔄</button>
+                <button class="btn btn-secondary" id="homeBtn">返回首页</button>
+            </div>
+        </div>
+
+        <p class="footer-note" id="footerNote">Made with ❤️ for Ziang</p>
     </div>
 
-    <p class="footer-note hidden" id="footerNote">Made with ❤️ for Ziang</p>
+    <!-- 答题反馈 -->
+    <div class="feedback" id="feedback">
+        <div class="feedback-bubble">
+            <div class="feedback-emoji" id="feedbackEmoji"></div>
+            <div class="feedback-text" id="feedbackText"></div>
+        </div>
+    </div>
+
+    <canvas id="confetti"></canvas>
 
     <script>
         const TOTAL = 10;
@@ -217,59 +352,33 @@
         ];
 
         const HINTS = [
-            '加油，Ziang 你可以的！💪',
-            '慢慢算，不着急～🐢',
-            '动动小脑筋！🧠',
-            '算对了就点下一题哦 ✨',
-            '数字朋友等你来算！🔢',
+            '加油，Ziang 你可以的！💪', '慢慢算，不着急～🐢', '动动小脑筋！🧠',
+            '算对了就点下一题哦 ✨', '数字朋友等你来算！🔢',
         ];
 
-        let questions = [];
-        let current = 0;
+        const CORRECT_MSGS = ['太棒了！🎉', '答对啦！⭐', '真厉害！👏', '好样的！💪', 'Ziang 最棒！🌟'];
+        const WRONG_MSGS = ['没关系，继续加油！🌱', '下一题加油！💪', '再想想哦～🐢'];
 
-        function rand(min, max) {
-            return Math.floor(Math.random() * (max - min + 1)) + min;
-        }
+        let questions = [], current = 0, streak = 0, switching = false;
 
-        function pick(arr) {
-            return arr[Math.floor(Math.random() * arr.length)];
-        }
+        function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+        function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
         function generateQuestions() {
-            const list = [];
-            const used = new Set();
-
+            const list = [], used = new Set();
             while (list.length < TOTAL) {
                 const isAdd = Math.random() < 0.5;
                 let a, b, answer, template, expr;
-
                 if (isAdd) {
-                    a = rand(1, 99);
-                    b = rand(1, 100 - a);
-                    answer = a + b;
-                    template = pick(ADD_TEMPLATES);
-                    expr = `${a} + ${b}`;
+                    a = rand(1, 99); b = rand(1, 100 - a);
+                    answer = a + b; template = pick(ADD_TEMPLATES); expr = `${a} + ${b}`;
                 } else {
-                    a = rand(1, 100);
-                    b = rand(1, a);
-                    answer = a - b;
-                    template = pick(SUB_TEMPLATES);
-                    expr = `${a} - ${b}`;
+                    a = rand(1, 100); b = rand(1, a);
+                    answer = a - b; template = pick(SUB_TEMPLATES); expr = `${a} - ${b}`;
                 }
-
-                const key = expr;
-                if (used.has(key)) continue;
-                used.add(key);
-
-                list.push({
-                    emoji: template.emoji,
-                    text: template.text(a, b),
-                    expr,
-                    a, b,
-                    isAdd,
-                    answer,
-                    userAnswer: null,
-                });
+                if (used.has(expr)) continue;
+                used.add(expr);
+                list.push({ emoji: template.emoji, text: template.text(a, b), expr, answer, userAnswer: null });
             }
             return list;
         }
@@ -283,66 +392,168 @@
             return { emoji: '✨', text: '勇敢开始就是胜利！再练一遍，慢慢就会熟练的！' };
         }
 
-        function show(id) {
-            ['welcome', 'quiz', 'result', 'footerNote'].forEach(name => {
-                document.getElementById(name).classList.toggle('hidden', name !== id && name !== 'footerNote');
+        function switchScreen(id) {
+            return new Promise(resolve => {
+                const screens = document.querySelectorAll('.screen');
+                const target = document.getElementById(id);
+                const currentEl = document.querySelector('.screen.active');
+                if (currentEl === target) { resolve(); return; }
+
+                if (currentEl) {
+                    currentEl.classList.add('leaving');
+                    currentEl.classList.remove('active');
+                    setTimeout(() => {
+                        currentEl.classList.remove('leaving');
+                        screens.forEach(s => s.classList.remove('active'));
+                        target.classList.add('active');
+                        resolve();
+                    }, 280);
+                } else {
+                    target.classList.add('active');
+                    resolve();
+                }
             });
-            document.getElementById('footerNote').classList.remove('hidden');
         }
 
-        function renderProgress() {
-            const bar = document.getElementById('progressBar');
-            bar.innerHTML = '';
-            for (let i = 0; i < TOTAL; i++) {
-                const dot = document.createElement('div');
-                dot.className = 'progress-dot';
-                if (i < current) dot.classList.add('done');
-                if (i === current) dot.classList.add('current');
-                dot.textContent = i + 1;
-                bar.appendChild(dot);
+        function updateProgress() {
+            document.getElementById('quizProgress').textContent = `第 ${current + 1} / ${TOTAL} 题`;
+            document.getElementById('progressFill').style.width = `${((current) / TOTAL) * 100}%`;
+            const streakEl = document.getElementById('streak');
+            if (streak >= 2) {
+                streakEl.textContent = `🔥 连对 ${streak} 题！`;
+                streakEl.classList.add('show');
+            } else {
+                streakEl.textContent = '';
+                streakEl.classList.remove('show');
             }
         }
 
         function renderQuestion() {
             const q = questions[current];
+            const box = document.getElementById('questionBox');
+            box.classList.remove('animate-in');
+            void box.offsetWidth;
+            box.classList.add('animate-in');
+
             document.getElementById('qEmoji').textContent = q.emoji;
             document.getElementById('qText').innerHTML =
-                q.text + '<br><span class="nums">' + q.expr + ' = ?</span>';
-            document.getElementById('answerInput').value = '';
+                q.text + '<span class="nums">' + q.expr + ' = ?</span>';
+
+            const input = document.getElementById('answerInput');
+            input.value = '';
+            input.classList.remove('shake', 'correct-flash');
+            input.style.borderColor = '#e0e0e0';
+
             document.getElementById('hintText').textContent = pick(HINTS);
-            document.getElementById('nextBtn').textContent =
-                current === TOTAL - 1 ? '交卷啦 📝' : '下一题 ➡️';
-            renderProgress();
-            document.getElementById('answerInput').focus();
+            document.getElementById('nextBtn').textContent = current === TOTAL - 1 ? '交卷啦 📝' : '下一题 ➡️';
+            updateProgress();
+
+            setTimeout(() => input.focus(), 350);
         }
 
-        function startQuiz() {
+        function showFeedback(isCorrect) {
+            const fb = document.getElementById('feedback');
+            fb.className = 'feedback show ' + (isCorrect ? 'correct' : 'wrong');
+            document.getElementById('feedbackEmoji').textContent = isCorrect ? '🎉' : '🌈';
+            document.getElementById('feedbackText').textContent = pick(isCorrect ? CORRECT_MSGS : WRONG_MSGS);
+            return new Promise(r => setTimeout(r, 650));
+        }
+
+        async function startQuiz() {
             questions = generateQuestions();
-            current = 0;
-            show('quiz');
+            current = 0; streak = 0;
+            await switchScreen('quiz');
             renderQuestion();
         }
 
-        function submitAnswer() {
+        async function submitAnswer() {
+            if (switching) return;
             const input = document.getElementById('answerInput');
             const val = input.value.trim();
+
             if (val === '') {
-                input.style.borderColor = '#ff6b6b';
+                input.classList.remove('shake');
+                void input.offsetWidth;
+                input.classList.add('shake');
                 document.getElementById('hintText').textContent = '先填一个数字再提交哦～';
                 return;
             }
-            input.style.borderColor = '#e0e0e0';
-            questions[current].userAnswer = parseInt(val, 10);
+
+            switching = true;
+            document.getElementById('nextBtn').disabled = true;
+            const userAns = parseInt(val, 10);
+            const isCorrect = userAns === questions[current].answer;
+            questions[current].userAnswer = userAns;
+
+            if (isCorrect) {
+                streak++;
+                input.classList.add('correct-flash');
+            } else {
+                streak = 0;
+            }
+
+            await showFeedback(isCorrect);
 
             if (current < TOTAL - 1) {
                 current++;
                 renderQuestion();
             } else {
-                showResult();
+                document.getElementById('progressFill').style.width = '100%';
+                await showResult();
             }
+
+            document.getElementById('nextBtn').disabled = false;
+            switching = false;
         }
 
-        function showResult() {
+        function animateScore(target) {
+            const el = document.getElementById('scoreNum');
+            const duration = 900;
+            const start = performance.now();
+            function tick(now) {
+                const p = Math.min((now - start) / duration, 1);
+                const eased = 1 - Math.pow(1 - p, 3);
+                el.textContent = Math.round(target * eased);
+                if (p < 1) requestAnimationFrame(tick);
+            }
+            requestAnimationFrame(tick);
+        }
+
+        function launchConfetti() {
+            const canvas = document.getElementById('confetti');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            const colors = ['#ff6b9d', '#c44dff', '#ffd43b', '#51cf66', '#4dabf7', '#ff922b'];
+            const pieces = Array.from({ length: 80 }, () => ({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height - canvas.height,
+                r: Math.random() * 6 + 4,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                speed: Math.random() * 3 + 2,
+                drift: Math.random() * 2 - 1,
+                rot: Math.random() * 360,
+            }));
+            let frame = 0;
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                pieces.forEach(p => {
+                    p.y += p.speed; p.x += p.drift; p.rot += 4;
+                    ctx.save();
+                    ctx.translate(p.x, p.y);
+                    ctx.rotate(p.rot * Math.PI / 180);
+                    ctx.fillStyle = p.color;
+                    ctx.fillRect(-p.r / 2, -p.r / 2, p.r, p.r * 0.6);
+                    ctx.restore();
+                });
+                frame++;
+                if (frame < 120) requestAnimationFrame(draw);
+                else ctx.clearRect(0, 0, canvas.width, canvas.height);
+            }
+            draw();
+        }
+
+        async function showResult() {
             let score = 0;
             questions.forEach(q => {
                 q.correct = q.userAnswer === q.answer;
@@ -350,7 +561,9 @@
             });
 
             const enc = getEncouragement(score);
-            document.getElementById('scoreNum').textContent = score;
+            await switchScreen('result');
+
+            animateScore(score);
             document.getElementById('encourageEmoji').textContent = enc.emoji;
             document.getElementById('encourageText').textContent = enc.text;
 
@@ -361,9 +574,9 @@
                     : '<span class="detail-mark wrong">✗</span>';
                 const ansLine = q.correct
                     ? `你的答案：${q.userAnswer}`
-                    : `你的答案：${q.userAnswer ?? '未作答'} · 正确答案：${q.answer}`;
+                    : `你的答案：${q.userAnswer} · 正确答案：${q.answer}`;
                 return `
-                    <div class="detail-item">
+                    <div class="detail-item" style="animation-delay:${i * 0.06}s">
                         <span class="detail-num">${i + 1}</span>
                         <div>
                             <div class="detail-q">${q.emoji} ${q.expr} = ${q.answer}</div>
@@ -373,7 +586,7 @@
                     </div>`;
             }).join('');
 
-            show('result');
+            if (score >= 80) launchConfetti();
         }
 
         document.getElementById('startBtn').addEventListener('click', startQuiz);
@@ -382,7 +595,7 @@
             if (e.key === 'Enter') submitAnswer();
         });
         document.getElementById('retryBtn').addEventListener('click', startQuiz);
-        document.getElementById('homeBtn').addEventListener('click', () => show('welcome'));
+        document.getElementById('homeBtn').addEventListener('click', () => switchScreen('welcome'));
 
         // 星星背景
         const starsEl = document.getElementById('stars');
