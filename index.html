@@ -285,7 +285,8 @@
         .detail-mark.wrong { color: #ff6b6b; }
 
         .btn-group { display: flex; flex-direction: column; align-items: center; }
-        .footer-note { margin-top: 0.75rem; font-size: 0.75rem; color: rgba(255,255,255,0.55); text-align: center; }
+        .footer-note { margin-top: 0.75rem; font-size: 0.75rem; color: rgba(255,255,255,0.55); text-align: center; line-height: 1.6; }
+        .footer-note .version { opacity: 0.75; font-variant-numeric: tabular-nums; }
         #confetti { position: fixed; inset: 0; pointer-events: none; z-index: 300; }
 
         @media (max-width: 480px) {
@@ -389,7 +390,7 @@
             </div>
         </div>
 
-        <p class="footer-note">Made with ❤️ for Ziang</p>
+        <p class="footer-note">Made with ❤️ for Ziang<br><span class="version" id="version">版本加载中…</span></p>
     </div>
 
     <div class="feedback" id="feedback">
@@ -993,7 +994,36 @@
             }
         });
 
+        function formatVersionDate(date) {
+            const parts = new Intl.DateTimeFormat('zh-CN', {
+                timeZone: 'Asia/Shanghai',
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false,
+            }).formatToParts(date);
+            const get = type => parts.find(p => p.type === type)?.value || '';
+            return `${get('year')}-${get('month')}-${get('day')} ${get('hour')}:${get('minute')}:${get('second')}`;
+        }
+
+        async function loadVersion() {
+            const el = document.getElementById('version');
+            try {
+                const res = await fetch('https://api.github.com/repos/xfstl/xfstl.github.io/commits/main');
+                if (!res.ok) throw new Error('fetch failed');
+                const data = await res.json();
+                const date = new Date(data.commit.committer.date);
+                el.textContent = `版本 ${formatVersionDate(date)}`;
+            } catch {
+                el.textContent = '版本 —';
+            }
+        }
+
         loadSettings();
+        loadVersion();
 
         const starsEl = document.getElementById('stars');
         for (let i = 0; i < 50; i++) {
