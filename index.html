@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#4a2c7a">
-    <title>Ziang的口算练习</title>
+    <title>Ziang的学习练习</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         html { -webkit-text-size-adjust: 100%; }
@@ -67,6 +67,57 @@
 
         .settings-block { margin-bottom: 1rem; }
         .settings-block .section-label { margin-bottom: 0.4rem; }
+
+        .subject-row {
+            display: flex; gap: 0.45rem; justify-content: center; flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+        .subject-chip {
+            flex: 1; min-width: 5.5rem; max-width: 8rem;
+            padding: 0.55rem 0.4rem; border: 2px solid #eee; border-radius: 14px;
+            background: #fafafa; font-family: inherit; font-size: 0.82rem; font-weight: 700;
+            color: #666; cursor: pointer; transition: all 0.15s;
+        }
+        .subject-chip.selected {
+            border-color: #c44dff; background: #faf5ff; color: #9b30ff;
+            box-shadow: 0 2px 8px rgba(196, 77, 255, 0.2);
+        }
+        .subject-chip:active { transform: scale(0.97); }
+
+        .subject-cards {
+            display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 0.5rem;
+        }
+        .subject-card {
+            display: flex; align-items: center; gap: 0.85rem;
+            width: 100%; padding: 1rem 1.1rem; border: 2px solid #eee;
+            border-radius: 18px; background: #fafafa; font-family: inherit;
+            text-align: left; cursor: pointer; transition: all 0.15s;
+        }
+        .subject-card:active { transform: scale(0.98); }
+        .subject-card:hover { border-color: #e0c3ff; background: #fdfaff; }
+        .subject-card-emoji { font-size: 2rem; flex-shrink: 0; }
+        .subject-card-text { flex: 1; min-width: 0; }
+        .subject-card-name {
+            display: block; font-size: 1.05rem; font-weight: 800; color: #333; margin-bottom: 0.15rem;
+        }
+        .subject-card-desc { display: block; font-size: 0.82rem; color: #888; line-height: 1.4; }
+        .subject-card-arrow { font-size: 1.25rem; color: #c44dff; flex-shrink: 0; }
+
+        .subject-title {
+            font-size: clamp(1.3rem, 4.5vw, 1.65rem); font-weight: 800; margin-bottom: 0.35rem;
+            background: linear-gradient(135deg, #ff6b9d, #c44dff);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .back-row { text-align: left; margin-bottom: 0.5rem; }
+        .btn-back {
+            border: none; background: none; font-family: inherit;
+            font-size: 0.88rem; font-weight: 600; color: #888; cursor: pointer; padding: 0.25rem 0;
+        }
+        .btn-back:active { color: #c44dff; }
+
+        .subject-tip {
+            font-size: 0.85rem; color: #888; margin-bottom: 1rem; line-height: 1.5;
+        }
 
         .best-badge {
             display: inline-flex; align-items: center; gap: 0.35rem;
@@ -223,6 +274,60 @@
 
         .hint { color: #aaa; font-size: 0.8rem; min-height: 1.1rem; }
 
+        .reading-passage {
+            background: #fff9db; border-radius: 14px; padding: 0.85rem 1rem;
+            font-size: 0.95rem; line-height: 1.75; color: #444; text-align: left;
+            margin-bottom: 0.75rem; border-left: 4px solid #ffd43b;
+            max-height: min(40vh, 240px); overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .reading-tag {
+            display: inline-block; font-size: 0.72rem; font-weight: 700;
+            color: #e67700; background: #fff3bf; padding: 0.15rem 0.55rem;
+            border-radius: 999px; margin-bottom: 0.45rem;
+        }
+        .choice-prompt {
+            font-size: 1.05rem; font-weight: 700; color: #333;
+            line-height: 1.5; margin-bottom: 0.85rem; text-align: left;
+        }
+        .choice-prompt .en-line {
+            display: block; font-size: 1.15rem; color: #4dabf7;
+            margin-top: 0.35rem; font-style: italic;
+        }
+        .choice-prompt .en-sub {
+            display: block; font-size: 0.92rem; color: #666;
+            margin-top: 0.4rem; font-weight: 600;
+        }
+        .choice-grid {
+            display: flex; flex-direction: column; gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+        .choice-btn {
+            width: 100%; padding: 0.75rem 1rem; border: 2px solid #eee;
+            border-radius: 14px; background: #fafafa; font-family: inherit;
+            font-size: 0.95rem; font-weight: 600; color: #444; text-align: left;
+            cursor: pointer; transition: all 0.15s;
+            display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;
+        }
+        .choice-text { flex: 1; line-height: 1.45; }
+        .choice-speak {
+            flex-shrink: 0; font-size: 1rem; line-height: 1;
+            padding: 0.35rem 0.45rem; border-radius: 8px; background: #e7f5ff;
+        }
+        .choice-speak:active { background: #d0ebff; }
+        .btn-speak {
+            display: inline-flex; align-items: center; gap: 0.3rem;
+            border: none; background: #e7f5ff; color: #1971c2;
+            font-family: inherit; font-size: 0.85rem; font-weight: 700;
+            padding: 0.45rem 0.85rem; border-radius: 999px;
+            margin-bottom: 0.65rem; cursor: pointer;
+        }
+        .btn-speak:active { background: #d0ebff; }
+        .choice-btn:active { transform: scale(0.98); }
+        .choice-btn.selected { border-color: #c44dff; background: #faf5ff; color: #9b30ff; }
+        .choice-btn.correct-pick { border-color: #51cf66; background: #f4fce8; color: #2b8a3e; }
+        .choice-btn.wrong-pick { border-color: #ff6b6b; background: #fff5f5; color: #c92a2a; }
+
         .feedback {
             position: fixed; inset: 0; z-index: 200;
             display: flex; align-items: center; justify-content: center;
@@ -368,14 +473,50 @@
     <div class="app">
         <div class="stars" id="stars"></div>
 
-        <div class="screen active" id="welcome">
-            <div class="mascot">⚡</div>
-            <h1 class="title">Ziang的口算练习</h1>
-            <p class="tagline">心算加减，越练越快 · 当天第3次满分可抽游戏时间 🎡</p>
+        <div class="screen active" id="home">
+            <div class="mascot">✨</div>
+            <h1 class="title">Ziang的学习练习</h1>
+            <p class="tagline">选一个科目，开始今天的练习吧 · 第3次满分可抽奖 🎡</p>
+
+            <p class="section-label">选择科目</p>
+            <div class="subject-cards">
+                <button class="subject-card" data-subject="math">
+                    <span class="subject-card-emoji">⚡</span>
+                    <span class="subject-card-text">
+                        <span class="subject-card-name">口算</span>
+                        <span class="subject-card-desc">心算加减，越练越快</span>
+                    </span>
+                    <span class="subject-card-arrow">›</span>
+                </button>
+                <button class="subject-card" data-subject="reading">
+                    <span class="subject-card-emoji">📖</span>
+                    <span class="subject-card-text">
+                        <span class="subject-card-name">阅读</span>
+                        <span class="subject-card-desc">成语故事 · 生活常识</span>
+                    </span>
+                    <span class="subject-card-arrow">›</span>
+                </button>
+                <button class="subject-card" data-subject="english">
+                    <span class="subject-card-emoji">🗣️</span>
+                    <span class="subject-card-text">
+                        <span class="subject-card-name">日常口语</span>
+                        <span class="subject-card-desc">200 句日常口语 · 听情境选回答</span>
+                    </span>
+                    <span class="subject-card-arrow">›</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="screen" id="subject">
+            <div class="back-row">
+                <button class="btn-back" id="backHomeBtn">← 选科目</button>
+            </div>
+            <div class="mascot" id="welcomeMascot">⚡</div>
+            <h2 class="subject-title" id="subjectTitle">口算练习</h2>
             <p class="stats-line" id="statsLine">开始你的第一次口算吧！</p>
 
-            <div class="settings-block">
-                <p class="section-label">练习设置</p>
+            <div class="settings-block" id="mathSettings">
+                <p class="section-label">口算设置</p>
                 <div class="difficulty-row">
                     <button class="chip selected" data-level="20">二十以内</button>
                     <button class="chip" data-level="100">一百以内</button>
@@ -385,9 +526,12 @@
                     <button class="chip" data-mode="add">加法</button>
                     <button class="chip" data-mode="sub">减法</button>
                 </div>
-                <div class="settings-row">
-                    <button class="chip" id="soundToggle">🔊 音效开</button>
-                </div>
+            </div>
+            <p class="subject-tip hidden" id="readingTip">100 篇短文 · 每次读 5 篇 · 不计时 · 优先未读</p>
+            <p class="subject-tip hidden" id="englishTip">200 句日常口语 · 优先未练 · 听情境选回答 · 点 🔊 听发音</p>
+
+            <div class="settings-row">
+                <button class="chip" id="soundToggle">🔊 音效开</button>
             </div>
 
             <button class="btn btn-primary" id="startBtn">开始口算 ⚡</button>
@@ -406,23 +550,33 @@
                 <button class="btn btn-ghost" id="quitBtn">退出</button>
             </div>
             <div class="question-box animate-in" id="questionBox">
-                <div class="oral-equation" id="oralEquation"></div>
-                <p class="oral-tip">心算后填答案</p>
+                <div id="mathQuestionUI">
+                    <div class="oral-equation" id="oralEquation"></div>
+                    <p class="oral-tip">心算后填答案</p>
+                </div>
+                <div id="choiceQuestionUI" class="hidden">
+                    <div class="reading-passage hidden" id="passageBox"></div>
+                    <div class="choice-prompt" id="choicePrompt"></div>
+                    <button type="button" class="btn-speak hidden" id="speakPromptBtn">🔊 听对方说</button>
+                    <div class="choice-grid" id="choiceGrid"></div>
+                </div>
             </div>
-            <div class="answer-display empty" id="answerDisplay">?</div>
-            <div class="numpad" id="numpad">
-                <button class="num-key" data-key="1">1</button>
-                <button class="num-key" data-key="2">2</button>
-                <button class="num-key" data-key="3">3</button>
-                <button class="num-key" data-key="4">4</button>
-                <button class="num-key" data-key="5">5</button>
-                <button class="num-key" data-key="6">6</button>
-                <button class="num-key" data-key="7">7</button>
-                <button class="num-key" data-key="8">8</button>
-                <button class="num-key" data-key="9">9</button>
-                <button class="num-key action" data-key="del">⌫</button>
-                <button class="num-key" data-key="0">0</button>
-                <button class="num-key submit" data-key="go" id="numpadGo">下一题</button>
+            <div id="mathAnswerUI">
+                <div class="answer-display empty" id="answerDisplay">?</div>
+                <div class="numpad" id="numpad">
+                    <button class="num-key" data-key="1">1</button>
+                    <button class="num-key" data-key="2">2</button>
+                    <button class="num-key" data-key="3">3</button>
+                    <button class="num-key" data-key="4">4</button>
+                    <button class="num-key" data-key="5">5</button>
+                    <button class="num-key" data-key="6">6</button>
+                    <button class="num-key" data-key="7">7</button>
+                    <button class="num-key" data-key="8">8</button>
+                    <button class="num-key" data-key="9">9</button>
+                    <button class="num-key action" data-key="del">⌫</button>
+                    <button class="num-key" data-key="0">0</button>
+                    <button class="num-key submit" data-key="go" id="numpadGo">下一题</button>
+                </div>
             </div>
             <p class="hint" id="hintText">心算出来再点数字～</p>
         </div>
@@ -434,8 +588,8 @@
                     <span class="grade-val" id="scoreNum">0</span>
                     <span class="grade-lbl">分</span>
                 </div>
-                <div class="grade-divider"></div>
-                <div class="grade-item time">
+                <div class="grade-divider" id="gradeTimeDivider"></div>
+                <div class="grade-item time" id="gradeTimeItem">
                     <span class="grade-val" id="timeNum">0</span>
                     <span class="grade-lbl">用时</span>
                 </div>
@@ -485,6 +639,7 @@
 
     <script>
         const TOTAL = 10;
+        const READING_TOTAL = 5;
         const POINTS = 10;
         const STORAGE_KEY = 'ziang-quiz';
         const WHEEL_PRIZES = [
@@ -497,20 +652,40 @@
         ];
         const WHEEL_PERFECT_COUNT = 3;
 
-        const HINTS = ['心算一下～🧠', '不用笔，靠脑子！💪', '算出来再填 ✨', '口算高手就是你 ⚡'];
-        const CORRECT_MSGS = ['对了！⚡', '口算正确！', '很快哦！👏', '继续！'];
+        const SUBJECTS = {
+            math: { id: 'math', name: '口算', title: '口算练习', emoji: '⚡', startLabel: '开始口算 ⚡', progress: '口算' },
+            reading: { id: 'reading', name: '阅读', title: '阅读练习', emoji: '📖', startLabel: '开始阅读 📖', progress: '阅读' },
+            english: { id: 'english', name: '日常口语', title: '日常口语', emoji: '🗣️', startLabel: '开始口语 🗣️', progress: '口语' },
+        };
+
+        const HINTS = {
+            math: ['心算一下～🧠', '不用笔，靠脑子！💪', '算出来再填 ✨', '口算高手就是你 ⚡'],
+            reading: ['仔细读一读 📖', '想想短文里说了什么', '答案就在文章里 ✨', '认真阅读哦～'],
+            english: ['想一想日常怎么说 🗣️', '选最自然的回答', 'English time! 💬', '口语小达人就是你'],
+        };
+        const CORRECT_MSGS = ['对了！⚡', '答对了！', '很棒哦！👏', '继续！'];
         const WRONG_MSGS = ['没关系～', '下一题！', '再练就好 💪'];
 
         let questions = [], current = 0, streak = 0, switching = false;
         let quizTotal = TOTAL, answerStr = '';
-        let maxNum = 20, quizMode = 'mix', soundOn = true, isReview = false;
+        let subject = 'math', maxNum = 20, quizMode = 'mix', soundOn = true, isReview = false;
         let timerStart = 0, timerInterval = null, elapsedMs = 0;
         let pausedMs = 0, pauseStart = 0, visibilityPauseStart = 0;
         let audioCtx = null;
         let wheelSpinDeg = 0, wheelSpinning = false, wheelPrizeIndex = -1;
+        let readingBank = [];
+        let readingBankPromise = null;
+        let englishBank = [];
+        let englishBankPromise = null;
 
         function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
         function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+        function usesTimer() { return subject !== 'reading'; }
+
+        function getSessionTotal(sub = subject) {
+            return sub === 'reading' ? READING_TOTAL : TOTAL;
+        }
 
         function getElapsedMs() {
             if (!timerStart) return elapsedMs;
@@ -576,7 +751,113 @@
         }
 
         function getRecordKey() {
-            return `record${maxNum}_${quizMode}`;
+            if (subject === 'math') return `record_math_${maxNum}_${quizMode}`;
+            return `record_${subject}`;
+        }
+
+        function getPracticeCountKey() {
+            return subject === 'math' ? 'practiceCount_math' : `practiceCount_${subject}`;
+        }
+
+        function shuffle(arr) {
+            const a = [...arr];
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = rand(0, i);
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        }
+
+        function pickQuestions(bank, total) {
+            return shuffle(bank).slice(0, total).map(q => ({ ...q, userAnswer: null }));
+        }
+
+        function getQuestionId(q, index, prefix) {
+            return q.id || `${prefix}${index}`;
+        }
+
+        function pickQuestionsSmart(bank, total, historyKey, idPrefix) {
+            const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+            const withIds = bank.map((q, i) => ({ ...q, id: getQuestionId(q, i, idPrefix) }));
+            let seen = data[historyKey] || [];
+            let unseen = withIds.filter(q => !seen.includes(q.id));
+
+            if (unseen.length === 0) {
+                seen = [];
+                unseen = [...withIds];
+            }
+
+            const picked = [];
+            const fromUnseen = shuffle(unseen);
+            for (const q of fromUnseen) {
+                if (picked.length >= total) break;
+                picked.push(q);
+            }
+            if (picked.length < total) {
+                const rest = shuffle(withIds.filter(q => !picked.some(p => p.id === q.id)));
+                picked.push(...rest.slice(0, total - picked.length));
+            }
+
+            const pickedIds = picked.map(q => q.id);
+            data[historyKey] = [...new Set([...seen, ...pickedIds])];
+            if (data[historyKey].length >= withIds.length) {
+                data[historyKey] = pickedIds;
+            }
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+
+            return picked.map(q => ({ ...q, userAnswer: null }));
+        }
+
+        function getReadingProgress() {
+            const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+            const seen = new Set(data.readingSeenIds || []);
+            return { total: readingBank.length, read: seen.size };
+        }
+
+        async function loadReadingBank() {
+            if (readingBank.length) return readingBank;
+            if (!readingBankPromise) {
+                readingBankPromise = fetch('reading.json')
+                    .then(res => {
+                        if (!res.ok) throw new Error('reading load failed');
+                        return res.json();
+                    })
+                    .then(data => {
+                        readingBank = Array.isArray(data) ? data : [];
+                        return readingBank;
+                    })
+                    .catch(() => {
+                        readingBank = [];
+                        return readingBank;
+                    });
+            }
+            return readingBankPromise;
+        }
+
+        function getEnglishProgress() {
+            const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+            const seen = new Set(data.englishSeenIds || []);
+            return { total: englishBank.length, read: seen.size };
+        }
+
+        async function loadEnglishBank() {
+            if (englishBank.length) return englishBank;
+            if (!englishBankPromise) {
+                englishBankPromise = fetch('english.json')
+                    .then(res => {
+                        if (!res.ok) throw new Error('english load failed');
+                        return res.json();
+                    })
+                    .then(data => {
+                        englishBank = Array.isArray(data) ? data : [];
+                        return englishBank;
+                    })
+                    .catch(() => {
+                        englishBank = [];
+                        return englishBank;
+                    });
+            }
+            return englishBankPromise;
         }
 
         function migrateStorage(data) {
@@ -589,6 +870,18 @@
                 data.record100_mix = { score: data.best100, timeMs: 999999999 };
                 changed = true;
             }
+            if (data.record20_mix && !data.record_math_20_mix) {
+                data.record_math_20_mix = data.record20_mix;
+                changed = true;
+            }
+            if (data.record100_mix && !data.record_math_100_mix) {
+                data.record_math_100_mix = data.record100_mix;
+                changed = true;
+            }
+            if (data.practiceCount && !data.practiceCount_math) {
+                data.practiceCount_math = data.practiceCount;
+                changed = true;
+            }
             if (changed) localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
             return data;
         }
@@ -598,6 +891,7 @@
                 let data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
                 data = migrateStorage(data);
                 soundOn = data.soundOn !== false;
+                subject = data.subject || 'math';
                 maxNum = data.level || 20;
                 quizMode = data.mode || 'mix';
             } catch { /* ignore */ }
@@ -608,32 +902,73 @@
                 el.classList.toggle('selected', el.dataset.mode === quizMode);
             });
             updateSoundBtn();
-            updateStatsLine();
+            updateSubjectPage();
         }
 
         function saveSettings() {
             const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
             data.soundOn = soundOn;
+            data.subject = subject;
             data.level = maxNum;
             data.mode = quizMode;
             localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
         }
 
+        function updateSubjectPage() {
+            const info = SUBJECTS[subject];
+            document.getElementById('welcomeMascot').textContent = info.emoji;
+            document.getElementById('subjectTitle').textContent = info.title;
+            document.getElementById('startBtn').textContent = info.startLabel;
+            document.getElementById('mathSettings').classList.toggle('hidden', subject !== 'math');
+            document.getElementById('readingTip').classList.toggle('hidden', subject !== 'reading');
+            document.getElementById('englishTip').classList.toggle('hidden', subject !== 'english');
+            updateStatsLine();
+        }
+
+        function openSubject(nextSubject) {
+            subject = nextSubject;
+            saveSettings();
+            if (subject === 'reading') {
+                loadReadingBank().then(() => updateSubjectPage());
+            } else if (subject === 'english') {
+                loadEnglishBank().then(() => updateSubjectPage());
+            } else {
+                updateSubjectPage();
+            }
+            switchScreen('subject');
+        }
+
         function updateStatsLine() {
             const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-            const count = data.practiceCount || 0;
+            const countKey = getPracticeCountKey();
+            let count = data[countKey] || 0;
+            if (!count && subject === 'math') count = data.practiceCount || 0;
             const best = getBestRecord();
+            const info = SUBJECTS[subject];
             const parts = [];
-            if (best) parts.push(`🏆 最佳 ${best.score}分 · ${formatTimeLabel(best.timeMs)}`);
+            if (subject === 'reading') {
+                const { total, read } = getReadingProgress();
+                parts.push(`题库 ${total} 篇 · 已读 ${read} 篇`);
+            }
+            if (subject === 'english') {
+                const { total, read } = getEnglishProgress();
+                parts.push(`题库 ${total} 句 · 已练 ${read} 句`);
+            }
+            if (best) {
+                parts.push(subject === 'reading'
+                    ? `🏆 ${info.name}最佳 ${best.score}分`
+                    : `🏆 ${info.name}最佳 ${best.score}分 · ${formatTimeLabel(best.timeMs)}`);
+            }
             if (count > 0) parts.push(`已练 ${count} 组`);
             document.getElementById('statsLine').textContent = parts.length
                 ? parts.join(' · ')
-                : '开始你的第一次口算吧！';
+                : `开始你的第一次${info.name}练习吧！`;
         }
 
         function incrementPracticeCount() {
             const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-            data.practiceCount = (data.practiceCount || 0) + 1;
+            const key = getPracticeCountKey();
+            data[key] = (data[key] || 0) + 1;
             localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
             updateStatsLine();
         }
@@ -646,15 +981,17 @@
         function isBetterRecord(score, timeMs, old) {
             if (!old) return score > 0;
             if (score > old.score) return true;
+            if (subject === 'reading') return false;
             return score === old.score && timeMs < old.timeMs;
         }
 
         function setBestRecord(score, timeMs) {
+            const recordTime = usesTimer() ? timeMs : 0;
             const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
             const key = getRecordKey();
             const old = data[key];
             if (isBetterRecord(score, timeMs, old)) {
-                data[key] = { score, timeMs };
+                data[key] = { score, timeMs: recordTime };
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
                 return true;
             }
@@ -689,7 +1026,7 @@
         }
 
         function isPerfectQuiz(score) {
-            return !isReview && quizTotal === TOTAL && score === quizTotal * POINTS;
+            return !isReview && quizTotal === getSessionTotal() && score === quizTotal * POINTS;
         }
 
         function incrementPerfectCount() {
@@ -805,6 +1142,20 @@
             return audioCtx;
         }
 
+        function stopSpeaking() {
+            if (window.speechSynthesis) speechSynthesis.cancel();
+        }
+
+        function speakEnglish(text) {
+            if (!soundOn || !text || !window.speechSynthesis) return;
+            stopSpeaking();
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.lang = 'en-US';
+            utter.rate = 0.88;
+            utter.pitch = 1;
+            speechSynthesis.speak(utter);
+        }
+
         function playTone(type) {
             if (!soundOn) return;
             try {
@@ -877,15 +1228,38 @@
             return list;
         }
 
+        async function generateQuestionsForSubject() {
+            if (subject === 'reading') {
+                const bank = await loadReadingBank();
+                if (!bank.length) return [];
+                return pickQuestionsSmart(bank, quizTotal, 'readingSeenIds', 'r');
+            }
+            if (subject === 'english') {
+                const bank = await loadEnglishBank();
+                if (!bank.length) return [];
+                return pickQuestionsSmart(bank, quizTotal, 'englishSeenIds', 'e');
+            }
+            return generateQuestions();
+        }
+
         function getEncouragement(score, timeMs) {
             const pct = score / (quizTotal * POINTS) * 100;
+            const subj = SUBJECTS[subject].name;
+            if (subject === 'reading') {
+                if (pct === 100) return { emoji: '🌟', text: `${subj}全对！读得很认真！` };
+                if (pct >= 90) return { emoji: '👏', text: `${subj}很棒！${score} 分` };
+                if (pct >= 80) return { emoji: '😊', text: `大部分对了！${score} 分` };
+                if (pct >= 60) return { emoji: '💪', text: '有进步！多练几组，理解力会越来越强！' };
+                if (pct >= 40) return { emoji: '🌱', text: '认真读一读，再来一组！' };
+                return { emoji: '✨', text: '每次阅读都有收获，再试一组吧！' };
+            }
             const fast = timeMs <= quizTotal * 5000;
-            if (pct === 100 && fast) return { emoji: '🌟', text: `全对！${formatTimeLabel(timeMs)} 完成，又快又准！` };
-            if (pct === 100) return { emoji: '🌟', text: `全对口算！用时 ${formatTimeLabel(timeMs)}，太棒了！` };
-            if (pct >= 90) return { emoji: '👏', text: `口算很棒！${score} 分，用时 ${formatTimeLabel(timeMs)}` };
+            if (pct === 100 && fast) return { emoji: '🌟', text: `${subj}全对！${formatTimeLabel(timeMs)} 完成，又快又准！` };
+            if (pct === 100) return { emoji: '🌟', text: `${subj}全对！用时 ${formatTimeLabel(timeMs)}，太棒了！` };
+            if (pct >= 90) return { emoji: '👏', text: `${subj}很棒！${score} 分，用时 ${formatTimeLabel(timeMs)}` };
             if (pct >= 80) return { emoji: '😊', text: `大部分对了！${score} 分 · ${formatTimeLabel(timeMs)}` };
-            if (pct >= 60) return { emoji: '💪', text: '有进步！多练几组，速度和准确率都会提高！' };
-            if (pct >= 40) return { emoji: '🌱', text: '口算需要多练，别放弃，再来一组！' };
+            if (pct >= 60) return { emoji: '💪', text: '有进步！多练几组，会越来越棒！' };
+            if (pct >= 40) return { emoji: '🌱', text: '别放弃，再来一组！' };
             return { emoji: '✨', text: '每组练习都有收获，再试一组吧！' };
         }
 
@@ -921,9 +1295,16 @@
             });
         }
 
+        function updateQuizChrome() {
+            const timed = usesTimer();
+            document.getElementById('quizTimer').classList.toggle('hidden', !timed);
+        }
+
         function updateProgress() {
+            const label = SUBJECTS[subject].progress;
+            const unit = subject === 'reading' ? '篇' : '题';
             document.getElementById('quizProgress').textContent =
-                `口算 ${current + 1} / ${quizTotal}` + (isReview ? '（错题）' : '');
+                `${label} ${current + 1} / ${quizTotal}${unit}` + (isReview ? '（错题）' : '');
             document.getElementById('progressFill').style.width = `${(current / quizTotal) * 100}%`;
             const streakEl = document.getElementById('streak');
             if (streak >= 2) {
@@ -933,8 +1314,83 @@
                 streakEl.textContent = '';
                 streakEl.classList.remove('show');
             }
-            document.getElementById('numpadGo').textContent =
-                current === quizTotal - 1 ? '交卷 📝' : '下一题 ➡️';
+            const goBtn = document.getElementById('numpadGo');
+            if (goBtn) {
+                goBtn.textContent = current === quizTotal - 1 ? '交卷 📝' : '下一题 ➡️';
+            }
+        }
+
+        function setQuizUIMode() {
+            const isMath = subject === 'math';
+            document.getElementById('mathQuestionUI').classList.toggle('hidden', !isMath);
+            document.getElementById('choiceQuestionUI').classList.toggle('hidden', isMath);
+            document.getElementById('mathAnswerUI').classList.toggle('hidden', !isMath);
+            document.getElementById('hintText').classList.toggle('hidden', !isMath);
+        }
+
+        function renderQuestion() {
+            const q = questions[current];
+            const box = document.getElementById('questionBox');
+            box.classList.remove('animate-in');
+            void box.offsetWidth;
+            box.classList.add('animate-in');
+            setQuizUIMode();
+
+            if (subject === 'math') {
+                const opClass = q.isAdd ? 'op-add' : 'op-sub';
+                const opSym = q.isAdd ? '+' : '−';
+                document.getElementById('oralEquation').innerHTML =
+                    `<span class="num">${q.a}</span>` +
+                    `<span class="${opClass}">${opSym}</span>` +
+                    `<span class="num">${q.b}</span>` +
+                    `<span class="eq">= ?</span>`;
+                answerStr = '';
+                const display = document.getElementById('answerDisplay');
+                display.classList.remove('shake', 'correct-flash');
+                updateAnswerDisplay();
+            } else {
+                const passageEl = document.getElementById('passageBox');
+                if (q.passage) {
+                    const tagHtml = q.tag ? `<span class="reading-tag">${q.tag}</span>` : '';
+                    passageEl.innerHTML = tagHtml + q.passage;
+                    passageEl.classList.remove('hidden');
+                } else {
+                    passageEl.classList.add('hidden');
+                }
+                const promptEl = document.getElementById('choicePrompt');
+                const speakPromptBtn = document.getElementById('speakPromptBtn');
+                if (subject === 'english') {
+                    let html = q.prompt;
+                    if (q.heard) {
+                        html += `<span class="en-line">"${q.heard}"</span>`;
+                    }
+                    if (q.sub) {
+                        html += `<span class="en-sub">${q.sub}</span>`;
+                    }
+                    promptEl.innerHTML = html;
+                    if (q.heard) {
+                        speakPromptBtn.classList.remove('hidden');
+                        speakPromptBtn.dataset.text = q.heard;
+                    } else {
+                        speakPromptBtn.classList.add('hidden');
+                    }
+                } else {
+                    promptEl.textContent = q.question || q.prompt;
+                    speakPromptBtn.classList.add('hidden');
+                }
+                document.getElementById('choiceGrid').innerHTML = q.options.map((opt, i) => {
+                    if (subject === 'english') {
+                        return `<button class="choice-btn" data-choice="${i}"><span class="choice-text">${opt}</span><span class="choice-speak" aria-label="朗读">🔊</span></button>`;
+                    }
+                    return `<button class="choice-btn" data-choice="${i}">${opt}</button>`;
+                }).join('');
+                if (subject === 'english' && soundOn && q.heard) {
+                    setTimeout(() => speakEnglish(q.heard), 350);
+                }
+            }
+
+            document.getElementById('hintText').textContent = pick(HINTS[subject]);
+            updateProgress();
         }
 
         function updateAnswerDisplay() {
@@ -946,30 +1402,6 @@
                 el.textContent = answerStr;
                 el.classList.remove('empty');
             }
-        }
-
-        function renderQuestion() {
-            const q = questions[current];
-            const box = document.getElementById('questionBox');
-            box.classList.remove('animate-in');
-            void box.offsetWidth;
-            box.classList.add('animate-in');
-
-            const opClass = q.isAdd ? 'op-add' : 'op-sub';
-            const opSym = q.isAdd ? '+' : '−';
-            document.getElementById('oralEquation').innerHTML =
-                `<span class="num">${q.a}</span>` +
-                `<span class="${opClass}">${opSym}</span>` +
-                `<span class="num">${q.b}</span>` +
-                `<span class="eq">= ?</span>`;
-
-            answerStr = '';
-            const display = document.getElementById('answerDisplay');
-            display.classList.remove('shake', 'correct-flash');
-            updateAnswerDisplay();
-
-            document.getElementById('hintText').textContent = pick(HINTS);
-            updateProgress();
         }
 
         function numpadInput(key) {
@@ -991,7 +1423,7 @@
         }
 
         async function showFeedback(isCorrect) {
-            pauseTimer();
+            if (usesTimer()) pauseTimer();
             const fb = document.getElementById('feedback');
             fb.className = 'feedback show ' + (isCorrect ? 'correct' : 'wrong');
             document.getElementById('feedbackEmoji').textContent = isCorrect ? '🎉' : '🌈';
@@ -999,7 +1431,7 @@
             playTone(isCorrect ? 'correct' : 'wrong');
             vibrate(isCorrect ? 'correct' : 'wrong');
             await new Promise(r => setTimeout(r, 450));
-            resumeTimer();
+            if (usesTimer()) resumeTimer();
         }
 
         async function startQuiz(reviewWrong = false, countPractice = false) {
@@ -1010,14 +1442,20 @@
                 questions = wrong.map(q => ({ ...q, userAnswer: null }));
                 quizTotal = questions.length;
             } else {
-                quizTotal = TOTAL;
-                questions = generateQuestions();
+                quizTotal = getSessionTotal();
+                questions = await generateQuestionsForSubject();
+                if (!questions.length && (subject === 'reading' || subject === 'english')) {
+                    alert(subject === 'reading' ? '阅读文章加载失败，请检查网络后重试' : '口语题目加载失败，请检查网络后重试');
+                    return;
+                }
                 if (countPractice) incrementPracticeCount();
             }
             current = 0;
             streak = 0;
             await switchScreen('quiz');
-            startTimer();
+            if (usesTimer()) startTimer();
+            else stopTimer();
+            updateQuizChrome();
             renderQuestion();
         }
 
@@ -1046,6 +1484,37 @@
             }
 
             await showFeedback(isCorrect);
+
+            if (current < quizTotal - 1) {
+                current++;
+                renderQuestion();
+            } else {
+                document.getElementById('progressFill').style.width = '100%';
+                await showResult();
+            }
+            switching = false;
+        }
+
+        async function submitChoice(choiceIndex) {
+            if (switching) return;
+            switching = true;
+            const q = questions[current];
+            q.userAnswer = choiceIndex;
+            const isCorrect = choiceIndex === q.answer;
+
+            if (isCorrect) streak++;
+            else streak = 0;
+
+            document.querySelectorAll('.choice-btn').forEach((btn, i) => {
+                btn.disabled = true;
+                if (i === q.answer) btn.classList.add('correct-pick');
+                else if (i === choiceIndex) btn.classList.add('wrong-pick');
+            });
+
+            await showFeedback(isCorrect);
+            if (subject === 'english' && soundOn && isCorrect) {
+                speakEnglish(q.options[q.answer]);
+            }
 
             if (current < quizTotal - 1) {
                 current++;
@@ -1124,7 +1593,10 @@
 
             await switchScreen('result');
             animateScore(score);
-            document.getElementById('timeNum').textContent = formatTimeLabel(elapsedMs);
+            const timed = usesTimer();
+            document.getElementById('gradeTimeDivider').classList.toggle('hidden', !timed);
+            document.getElementById('gradeTimeItem').classList.toggle('hidden', !timed);
+            if (timed) document.getElementById('timeNum').textContent = formatTimeLabel(elapsedMs);
             renderStars(getStars(score));
             document.getElementById('newRecord').classList.toggle('hidden', !isNewBest);
             document.getElementById('encourageEmoji').textContent = enc.emoji;
@@ -1146,12 +1618,25 @@
                 const mark = q.correct
                     ? '<span class="detail-mark correct">✓</span>'
                     : '<span class="detail-mark wrong">✗</span>';
-                const ansLine = q.correct
-                    ? `你的答案：${q.userAnswer}`
-                    : `你的答案：${q.userAnswer} · 正确答案：${q.answer}`;
+                let qLine, ansLine;
+                if (subject === 'math') {
+                    qLine = `${q.expr} = ${q.answer}`;
+                    ansLine = q.correct
+                        ? `你的答案：${q.userAnswer}`
+                        : `你的答案：${q.userAnswer} · 正确答案：${q.answer}`;
+                } else {
+                    qLine = (subject === 'reading' || subject === 'english') && q.tag
+                        ? `[${q.tag}] ${q.question || q.prompt}`
+                        : (q.question || q.prompt);
+                    const userText = q.options[q.userAnswer] ?? '未作答';
+                    const correctText = q.options[q.answer];
+                    ansLine = q.correct
+                        ? `你的答案：${userText}`
+                        : `你的答案：${userText} · 正确答案：${correctText}`;
+                }
                 return `<div class="detail-item" style="animation-delay:${i * 0.05}s">
                     <span class="detail-num">${i + 1}</span>
-                    <div><div class="detail-q">${q.expr} = ${q.answer}</div>
+                    <div><div class="detail-q">${qLine}</div>
                     <div class="detail-ans">${ansLine}</div></div>${mark}</div>`;
             }).join('');
 
@@ -1159,6 +1644,15 @@
             if (isNewBest) playTone('start');
             if (showWheel) setTimeout(openWheelOverlay, 800);
         }
+
+        document.querySelectorAll('.subject-card').forEach(btn => {
+            btn.addEventListener('click', () => {
+                playTone('start');
+                openSubject(btn.dataset.subject);
+            });
+        });
+
+        document.getElementById('backHomeBtn').addEventListener('click', () => switchScreen('home'));
 
         document.querySelectorAll('[data-level]').forEach(btn => {
             btn.addEventListener('click', () => {
@@ -1192,21 +1686,54 @@
             if (key) numpadInput(key);
         });
 
-        document.getElementById('startBtn').addEventListener('click', () => {
+        document.getElementById('choiceGrid').addEventListener('click', e => {
+            const speakEl = e.target.closest('.choice-speak');
+            if (speakEl) {
+                e.preventDefault();
+                e.stopPropagation();
+                const text = speakEl.closest('.choice-btn')?.querySelector('.choice-text')?.textContent;
+                if (text) speakEnglish(text);
+                return;
+            }
+            const btn = e.target.closest('.choice-btn');
+            if (!btn || btn.disabled) return;
+            submitChoice(+btn.dataset.choice);
+        });
+
+        document.getElementById('speakPromptBtn').addEventListener('click', () => {
+            const text = document.getElementById('speakPromptBtn').dataset.text;
+            if (text) speakEnglish(text);
+        });
+
+        document.getElementById('startBtn').addEventListener('click', async () => {
             playTone('start');
+            const btn = document.getElementById('startBtn');
+            if (subject === 'reading' && !readingBank.length) {
+                btn.disabled = true;
+                btn.textContent = '加载文章…';
+                await loadReadingBank();
+                btn.disabled = false;
+                btn.textContent = SUBJECTS.reading.startLabel;
+            } else if (subject === 'english' && !englishBank.length) {
+                btn.disabled = true;
+                btn.textContent = '加载题目…';
+                await loadEnglishBank();
+                btn.disabled = false;
+                btn.textContent = SUBJECTS.english.startLabel;
+            }
             startQuiz(false, true);
         });
         document.getElementById('retryBtn').addEventListener('click', () => startQuiz(false, false));
         document.getElementById('wrongBtn').addEventListener('click', () => startQuiz(true));
         document.getElementById('homeBtn').addEventListener('click', () => {
             closeWheelOverlay();
-            switchScreen('welcome');
-            updateStatsLine();
+            switchScreen('home');
         });
         document.getElementById('quitBtn').addEventListener('click', () => {
             if (confirm('确定要退出吗？本次进度不会保存哦～')) {
                 stopTimer();
-                switchScreen('welcome');
+                stopSpeaking();
+                switchScreen('subject');
             }
         });
 
@@ -1218,6 +1745,7 @@
 
         document.addEventListener('keydown', e => {
             if (!document.getElementById('quiz').classList.contains('active')) return;
+            if (subject !== 'math') return;
             if (e.key >= '0' && e.key <= '9') numpadInput(e.key);
             else if (e.key === 'Backspace') numpadInput('del');
             else if (e.key === 'Enter') numpadInput('go');
@@ -1225,7 +1753,7 @@
 
         document.addEventListener('visibilitychange', () => {
             const inQuiz = document.getElementById('quiz').classList.contains('active');
-            if (!inQuiz || !timerStart) return;
+            if (!inQuiz || !timerStart || !usesTimer()) return;
             if (document.hidden) {
                 if (!pauseStart) visibilityPauseStart = Date.now();
             } else if (visibilityPauseStart) {
