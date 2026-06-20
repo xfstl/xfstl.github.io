@@ -302,7 +302,7 @@
             <div class="mascot">⚡</div>
             <h1 class="title">Ziang的口算练习</h1>
             <p class="tagline">心算加减，越练越快！</p>
-            <div class="best-badge" id="bestBadge">🏆 最高分：--</div>
+            <div class="best-badge" id="bestBadge">🏆 最佳：--</div>
             <div class="best-badge" id="practiceBadge" style="background:linear-gradient(135deg,#f0f9ff,#e7f5ff);color:#1971c2;margin-top:-0.5rem;">📊 已练 0 组</div>
 
             <p class="section-label">口算范围</p>
@@ -413,9 +413,18 @@
         let quizTotal = TOTAL, answerStr = '';
         let maxNum = 20, quizMode = 'mix', soundOn = true, isReview = false;
         let timerStart = 0, timerInterval = null, elapsedMs = 0;
+        let pausedMs = 0, pauseStart = 0, visibilityPauseStart = 0;
+        let audioCtx = null;
 
         function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
         function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+        function getElapsedMs() {
+            if (!timerStart) return elapsedMs;
+            const activePause = pauseStart ? Date.now() - pauseStart : 0;
+            const visPause = visibilityPauseStart ? Date.now() - visibilityPauseStart : 0;
+            return Math.max(0, Date.now() - timerStart - pausedMs - activePause - visPause);
+        }
 
         function formatTime(ms) {
             const totalSec = Math.floor(ms / 1000);
@@ -435,6 +444,9 @@
             stopTimer();
             timerStart = Date.now();
             elapsedMs = 0;
+            pausedMs = 0;
+            pauseStart = 0;
+            visibilityPauseStart = 0;
             updateTimerDisplay();
             timerInterval = setInterval(updateTimerDisplay, 200);
         }
@@ -444,12 +456,28 @@
                 clearInterval(timerInterval);
                 timerInterval = null;
             }
-            if (timerStart) elapsedMs = Date.now() - timerStart;
+            if (timerStart) {
+                elapsedMs = getElapsedMs();
+                timerStart = 0;
+                pauseStart = 0;
+                visibilityPauseStart = 0;
+            }
             updateTimerDisplay();
         }
 
+        function pauseTimer() {
+            if (!timerStart || pauseStart) return;
+            pauseStart = Date.now();
+        }
+
+        function resumeTimer() {
+            if (!pauseStart) return;
+            pausedMs += Date.now() - pauseStart;
+            pauseStart = 0;
+        }
+
         function updateTimerDisplay() {
-            const ms = timerStart ? Date.now() - timerStart : elapsedMs;
+            const ms = timerStart ? getElapsedMs() : elapsedMs;
             const el = document.getElementById('quizTimer');
             if (el) el.textContent = formatTime(ms);
         }
@@ -458,9 +486,24 @@
             return `record${maxNum}_${quizMode}`;
         }
 
+        function migrateStorage(data) {
+            let changed = false;
+            if (data.best20 && !data.record20_mix) {
+                data.record20_mix = { score: data.best20, timeMs: 999999999 };
+                changed = true;
+            }
+            if (data.best100 && !data.record100_mix) {
+                data.record100_mix = { score: data.best100, timeMs: 999999999 };
+                changed = true;
+            }
+            if (changed) localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            return data;
+        }
+
         function loadSettings() {
             try {
-                const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+                let data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+                data = migrateStorage(data);
                 soundOn = data.soundOn !== false;
                 maxNum = data.level || 20;
                 quizMode = data.mode || 'mix';
@@ -533,10 +576,16 @@
             document.getElementById('soundToggle').classList.toggle('selected', soundOn);
         }
 
+        function getAudioContext() {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            return audioCtx;
+        }
+
         function playTone(type) {
             if (!soundOn) return;
             try {
-                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const ctx = getAudioContext();
                 const osc = ctx.createOscillator();
                 const gain = ctx.createGain();
                 osc.connect(gain);
@@ -559,7 +608,11 @@
         function generateQuestions() {
             const list = [], used = new Set();
             const cap = maxNum;
-            while (list.length < quizTotal) {
+            let attempts = 0;
+            const maxAttempts = quizTotal * 100;
+
+            while (list.length < quizTotal && attempts < maxAttempts) {
+                attempts++;
                 let isAdd;
                 if (quizMode === 'add') isAdd = true;
                 else if (quizMode === 'sub') isAdd = false;
@@ -579,6 +632,23 @@
                 }
                 if (used.has(expr)) continue;
                 used.add(expr);
+                list.push({ a, b, isAdd, expr, answer, userAnswer: null });
+            }
+
+            while (list.length < quizTotal) {
+                let isAdd = quizMode === 'sub' ? false : (quizMode === 'add' || Math.random() < 0.5);
+                let a, b, answer, expr;
+                if (isAdd) {
+                    a = rand(1, cap - 1);
+                    b = rand(1, cap - a);
+                    answer = a + b;
+                    expr = `${a} + ${b}`;
+                } else {
+                    a = rand(1, cap);
+                    b = rand(1, a);
+                    answer = a - b;
+                    expr = `${a} - ${b}`;
+                }
                 list.push({ a, b, isAdd, expr, answer, userAnswer: null });
             }
             return list;
@@ -695,17 +765,19 @@
             if (navigator.vibrate) navigator.vibrate(type === 'correct' ? [30] : [20, 40, 20]);
         }
 
-        function showFeedback(isCorrect) {
+        async function showFeedback(isCorrect) {
+            pauseTimer();
             const fb = document.getElementById('feedback');
             fb.className = 'feedback show ' + (isCorrect ? 'correct' : 'wrong');
             document.getElementById('feedbackEmoji').textContent = isCorrect ? '🎉' : '🌈';
             document.getElementById('feedbackText').textContent = pick(isCorrect ? CORRECT_MSGS : WRONG_MSGS);
             playTone(isCorrect ? 'correct' : 'wrong');
             vibrate(isCorrect ? 'correct' : 'wrong');
-            return new Promise(r => setTimeout(r, 450));
+            await new Promise(r => setTimeout(r, 450));
+            resumeTimer();
         }
 
-        async function startQuiz(reviewWrong = false) {
+        async function startQuiz(reviewWrong = false, countPractice = false) {
             isReview = reviewWrong;
             if (reviewWrong) {
                 const wrong = questions.filter(q => q.userAnswer !== q.answer);
@@ -715,7 +787,7 @@
             } else {
                 quizTotal = TOTAL;
                 questions = generateQuestions();
-                if (!isReview) incrementPracticeCount();
+                if (countPractice) incrementPracticeCount();
             }
             current = 0;
             streak = 0;
@@ -836,6 +908,10 @@
             document.getElementById('wrongBtn').classList.toggle('hidden', wrongCount === 0);
             updateBestBadge();
 
+            if (isReview) {
+                document.getElementById('newRecord').classList.add('hidden');
+            }
+
             document.getElementById('detailsList').innerHTML = questions.map((q, i) => {
                 const mark = q.correct
                     ? '<span class="detail-mark correct">✓</span>'
@@ -887,9 +963,9 @@
 
         document.getElementById('startBtn').addEventListener('click', () => {
             playTone('start');
-            startQuiz(false);
+            startQuiz(false, true);
         });
-        document.getElementById('retryBtn').addEventListener('click', () => startQuiz(false));
+        document.getElementById('retryBtn').addEventListener('click', () => startQuiz(false, false));
         document.getElementById('wrongBtn').addEventListener('click', () => startQuiz(true));
         document.getElementById('homeBtn').addEventListener('click', () => switchScreen('welcome'));
         document.getElementById('quitBtn').addEventListener('click', () => {
@@ -904,6 +980,17 @@
             if (e.key >= '0' && e.key <= '9') numpadInput(e.key);
             else if (e.key === 'Backspace') numpadInput('del');
             else if (e.key === 'Enter') numpadInput('go');
+        });
+
+        document.addEventListener('visibilitychange', () => {
+            const inQuiz = document.getElementById('quiz').classList.contains('active');
+            if (!inQuiz || !timerStart) return;
+            if (document.hidden) {
+                if (!pauseStart) visibilityPauseStart = Date.now();
+            } else if (visibilityPauseStart) {
+                pausedMs += Date.now() - visibilityPauseStart;
+                visibilityPauseStart = 0;
+            }
         });
 
         loadSettings();
