@@ -17,11 +17,16 @@
             padding: max(0.75rem, env(safe-area-inset-top)) max(0.75rem, env(safe-area-inset-right))
                      max(0.75rem, env(safe-area-inset-bottom)) max(0.75rem, env(safe-area-inset-left));
             overflow-x: hidden; touch-action: manipulation;
+            transition: background 0.4s ease;
+        }
+        body.quiz-mode {
+            background: linear-gradient(180deg, #f3eeff 0%, #e8f0ff 100%);
         }
         .app { width: 100%; max-width: 480px; position: relative; }
         .hidden { display: none !important; }
 
-        .stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+        .stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; transition: opacity 0.4s ease; }
+        body.quiz-mode .stars { opacity: 0; }
         .star {
             position: absolute; background: #fff; border-radius: 50%;
             animation: twinkle var(--dur) ease-in-out infinite; animation-delay: var(--delay);
@@ -53,7 +58,15 @@
             background: linear-gradient(135deg, #ff6b9d, #c44dff, #4dabf7);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
         }
-        .tagline { color: #888; font-size: 0.95rem; margin-bottom: 1rem; }
+        .tagline { color: #888; font-size: 0.95rem; margin-bottom: 0.75rem; }
+
+        .stats-line {
+            font-size: 0.82rem; color: #888; margin-bottom: 1rem; line-height: 1.5;
+        }
+        .stats-line strong { color: #c44dff; }
+
+        .settings-block { margin-bottom: 1rem; }
+        .settings-block .section-label { margin-bottom: 0.4rem; }
 
         .best-badge {
             display: inline-flex; align-items: center; gap: 0.35rem;
@@ -81,11 +94,12 @@
         }
         .chip:active { transform: scale(0.96); }
 
-        .rules {
-            background: #fff5f8; border-radius: 16px; padding: 0.85rem 1rem;
-            text-align: left; margin-bottom: 1rem; color: #666; font-size: 0.88rem; line-height: 1.7;
+        /* 答题页专注模式 */
+        body.quiz-mode .screen {
+            box-shadow: 0 8px 32px rgba(100, 80, 180, 0.12);
         }
-        .rules li { margin-left: 1.1rem; }
+        body.quiz-mode .hint { display: none; }
+        body.quiz-mode .oral-tip { display: none; }
 
         .btn {
             display: inline-flex; align-items: center; justify-content: center; gap: 0.35rem;
@@ -285,7 +299,62 @@
         .detail-mark.wrong { color: #ff6b6b; }
 
         .btn-group { display: flex; flex-direction: column; align-items: center; }
+
+        /* 满分转盘 */
+        .wheel-overlay {
+            position: fixed; inset: 0; z-index: 400;
+            background: rgba(20, 10, 50, 0.75);
+            display: flex; align-items: center; justify-content: center;
+            padding: 1rem;
+        }
+        .wheel-modal {
+            background: #fff; border-radius: 24px; padding: 1.5rem 1.25rem;
+            width: 100%; max-width: 340px; text-align: center;
+            animation: screenIn 0.4s ease forwards;
+        }
+        .wheel-modal h2 { font-size: 1.25rem; color: #333; margin-bottom: 0.25rem; }
+        .wheel-sub { font-size: 0.85rem; color: #888; margin-bottom: 1rem; }
+        .wheel-wrap {
+            position: relative; width: 240px; height: 240px; margin: 0 auto 1.25rem;
+        }
+        .wheel-pointer {
+            position: absolute; top: -8px; left: 50%; transform: translateX(-50%);
+            font-size: 1.5rem; z-index: 2; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
+        .wheel {
+            width: 100%; height: 100%; border-radius: 50%;
+            border: 6px solid #fff;
+            box-shadow: 0 0 0 3px #c44dff, 0 8px 24px rgba(0,0,0,0.15);
+            transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+            position: relative; overflow: hidden;
+        }
+        .wheel-segment {
+            position: absolute; left: 50%; top: 50%;
+            width: 0; height: 45%; margin-top: -45%;
+            transform-origin: bottom center;
+            display: flex; justify-content: center;
+            font-size: 0.7rem; font-weight: 700; color: #fff;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.25);
+            pointer-events: none;
+        }
+        .wheel-segment span {
+            display: block; width: 3.5rem; text-align: center;
+            transform: translateY(0.5rem);
+        }
+        .wheel-result {
+            background: #fff9db; border-radius: 16px; padding: 1rem; margin-bottom: 0.75rem;
+        }
+        .wheel-result p { font-size: 1.1rem; font-weight: 700; color: #e67700; margin-bottom: 0.75rem; }
+        .wheel-result .parent-note { font-size: 0.78rem; color: #888; font-weight: 400; margin-bottom: 0.5rem; }
+        .spin-invite {
+            display: inline-block; background: linear-gradient(135deg, #ffd43b, #ff922b);
+            color: #fff; font-weight: 700; font-size: 0.9rem;
+            padding: 0.5rem 1rem; border-radius: 999px; margin-bottom: 0.75rem;
+            animation: popIn 0.5s ease; cursor: pointer;
+        }
+
         .footer-note { margin-top: 0.75rem; font-size: 0.75rem; color: rgba(255,255,255,0.55); text-align: center; line-height: 1.6; }
+        body.quiz-mode .footer-note { color: rgba(100, 80, 140, 0.45); }
         .footer-note .version { opacity: 0.75; font-variant-numeric: tabular-nums; }
         #confetti { position: fixed; inset: 0; pointer-events: none; z-index: 300; }
 
@@ -295,39 +364,32 @@
         }
     </style>
 </head>
-<body>
+<body class="welcome-mode">
     <div class="app">
         <div class="stars" id="stars"></div>
 
         <div class="screen active" id="welcome">
             <div class="mascot">⚡</div>
             <h1 class="title">Ziang的口算练习</h1>
-            <p class="tagline">心算加减，越练越快！</p>
-            <div class="best-badge" id="bestBadge">🏆 最佳：--</div>
-            <div class="best-badge" id="practiceBadge" style="background:linear-gradient(135deg,#f0f9ff,#e7f5ff);color:#1971c2;margin-top:-0.5rem;">📊 已练 0 组</div>
+            <p class="tagline">心算加减，越练越快 · 当天第3次满分可抽游戏时间 🎡</p>
+            <p class="stats-line" id="statsLine">开始你的第一次口算吧！</p>
 
-            <p class="section-label">口算范围</p>
-            <div class="difficulty-row">
-                <button class="chip selected" data-level="20">二十以内</button>
-                <button class="chip" data-level="100">一百以内</button>
+            <div class="settings-block">
+                <p class="section-label">练习设置</p>
+                <div class="difficulty-row">
+                    <button class="chip selected" data-level="20">二十以内</button>
+                    <button class="chip" data-level="100">一百以内</button>
+                </div>
+                <div class="difficulty-row">
+                    <button class="chip selected" data-mode="mix">加减混合</button>
+                    <button class="chip" data-mode="add">加法</button>
+                    <button class="chip" data-mode="sub">减法</button>
+                </div>
+                <div class="settings-row">
+                    <button class="chip" id="soundToggle">🔊 音效开</button>
+                </div>
             </div>
 
-            <p class="section-label">题型</p>
-            <div class="difficulty-row">
-                <button class="chip selected" data-mode="mix">加减混合</button>
-                <button class="chip" data-mode="add">加法</button>
-                <button class="chip" data-mode="sub">减法</button>
-            </div>
-
-            <p class="section-label">设置</p>
-            <div class="settings-row">
-                <button class="chip" id="soundToggle">🔊 音效开</button>
-            </div>
-
-            <ul class="rules">
-                <li>每组 <strong>10</strong> 道口算，自动计时</li>
-                <li>成绩 = 分数 + 用时，越高越快越好</li>
-            </ul>
             <button class="btn btn-primary" id="startBtn">开始口算 ⚡</button>
         </div>
 
@@ -382,6 +444,8 @@
             <div class="new-record hidden" id="newRecord">🎉 新纪录！</div>
             <div class="encourage-emoji" id="encourageEmoji"></div>
             <p class="encourage-text" id="encourageText"></p>
+            <p class="spin-invite hidden" id="spinInvite">🎡 今天第3次满分！点击抽取游戏时间</p>
+            <button class="btn btn-accent hidden" id="openWheelBtn">转转盘 🎡</button>
             <div class="details" id="detailsList"></div>
             <div class="btn-group">
                 <button class="btn btn-primary" id="retryBtn">再练一组 🔄</button>
@@ -401,10 +465,37 @@
     </div>
     <canvas id="confetti"></canvas>
 
+    <div class="wheel-overlay hidden" id="wheelOverlay">
+        <div class="wheel-modal">
+            <h2>🎡 满分奖励转盘</h2>
+            <p class="wheel-sub">今天第3次满分！转出游戏时间（每天一次）</p>
+            <div class="wheel-wrap">
+                <div class="wheel-pointer">▼</div>
+                <div class="wheel" id="wheel"></div>
+            </div>
+            <button class="btn btn-primary" id="spinBtn">转起来！</button>
+            <div class="wheel-result hidden" id="wheelResult">
+                <p class="parent-note">请家长确认后开始计时</p>
+                <p id="wheelPrizeText">获得 10 分钟游戏时间 🎮</p>
+                <button class="btn btn-accent" id="parentConfirmBtn">家长确认 ✓</button>
+            </div>
+            <button class="btn btn-secondary" id="wheelCloseBtn" style="margin-top:0.5rem;">关闭</button>
+        </div>
+    </div>
+
     <script>
         const TOTAL = 10;
         const POINTS = 10;
         const STORAGE_KEY = 'ziang-quiz';
+        const WHEEL_PRIZES = [
+            { label: '5分钟', minutes: 5, color: '#ffd43b' },
+            { label: '8分钟', minutes: 8, color: '#ff922b' },
+            { label: '10分钟', minutes: 10, color: '#ff6b9d' },
+            { label: '12分钟', minutes: 12, color: '#c44dff' },
+            { label: '15分钟', minutes: 15, color: '#4dabf7' },
+            { label: '20分钟', minutes: 20, color: '#51cf66' },
+        ];
+        const WHEEL_PERFECT_COUNT = 3;
 
         const HINTS = ['心算一下～🧠', '不用笔，靠脑子！💪', '算出来再填 ✨', '口算高手就是你 ⚡'];
         const CORRECT_MSGS = ['对了！⚡', '口算正确！', '很快哦！👏', '继续！'];
@@ -416,6 +507,7 @@
         let timerStart = 0, timerInterval = null, elapsedMs = 0;
         let pausedMs = 0, pauseStart = 0, visibilityPauseStart = 0;
         let audioCtx = null;
+        let wheelSpinDeg = 0, wheelSpinning = false, wheelPrizeIndex = -1;
 
         function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
         function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
@@ -516,8 +608,7 @@
                 el.classList.toggle('selected', el.dataset.mode === quizMode);
             });
             updateSoundBtn();
-            updateBestBadge();
-            updatePracticeBadge();
+            updateStatsLine();
         }
 
         function saveSettings() {
@@ -528,18 +619,23 @@
             localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
         }
 
-        function updatePracticeBadge() {
+        function updateStatsLine() {
             const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
             const count = data.practiceCount || 0;
-            document.getElementById('practiceBadge').textContent =
-                count > 0 ? `📊 已练 ${count} 组口算` : '📊 开始第一组口算吧！';
+            const best = getBestRecord();
+            const parts = [];
+            if (best) parts.push(`🏆 最佳 ${best.score}分 · ${formatTimeLabel(best.timeMs)}`);
+            if (count > 0) parts.push(`已练 ${count} 组`);
+            document.getElementById('statsLine').textContent = parts.length
+                ? parts.join(' · ')
+                : '开始你的第一次口算吧！';
         }
 
         function incrementPracticeCount() {
             const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
             data.practiceCount = (data.practiceCount || 0) + 1;
             localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-            updatePracticeBadge();
+            updateStatsLine();
         }
 
         function getBestRecord() {
@@ -565,11 +661,137 @@
             return false;
         }
 
-        function updateBestBadge() {
-            const best = getBestRecord();
-            document.getElementById('bestBadge').textContent = best
-                ? `🏆 最佳：${best.score}分 · ${formatTimeLabel(best.timeMs)}`
-                : '🏆 快来创造第一个纪录吧！';
+        function getTodayKey() {
+            return new Date().toLocaleDateString('sv-SE', { timeZone: 'Asia/Shanghai' });
+        }
+
+        function normalizeDailyState(data) {
+            const today = getTodayKey();
+            let changed = false;
+            if (data.lastWheelDate && data.lastWheelDate !== today) {
+                data.lastWheelDate = '';
+                data.lastWheelPrize = null;
+                data.wheelConfirmed = false;
+                changed = true;
+            }
+            if (data.perfectCountDate !== today) {
+                data.perfectCountDate = today;
+                data.perfectCountToday = 0;
+                changed = true;
+            }
+            if (changed) localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            return data;
+        }
+
+        function getWheelData() {
+            const data = normalizeDailyState(JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'));
+            return { date: data.lastWheelDate || '', prize: data.lastWheelPrize || null, confirmed: !!data.wheelConfirmed };
+        }
+
+        function isPerfectQuiz(score) {
+            return !isReview && quizTotal === TOTAL && score === quizTotal * POINTS;
+        }
+
+        function incrementPerfectCount() {
+            const data = normalizeDailyState(JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'));
+            data.perfectCountToday = (data.perfectCountToday || 0) + 1;
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            return data.perfectCountToday;
+        }
+
+        function hasSpunWheelToday() {
+            return getWheelData().date === getTodayKey();
+        }
+
+        function canOfferWheel(score, perfectCount) {
+            return isPerfectQuiz(score)
+                && perfectCount === WHEEL_PERFECT_COUNT
+                && !hasSpunWheelToday();
+        }
+
+        function buildWheel() {
+            const wheel = document.getElementById('wheel');
+            const n = WHEEL_PRIZES.length;
+            const step = 360 / n;
+            const stops = WHEEL_PRIZES.map((p, i) => `${p.color} ${i * step}deg ${(i + 1) * step}deg`).join(', ');
+            wheel.style.background = `conic-gradient(from -90deg, ${stops})`;
+            wheel.innerHTML = WHEEL_PRIZES.map((p, i) => {
+                const rot = i * step + step / 2;
+                return `<div class="wheel-segment" style="transform:rotate(${rot}deg)"><span>${p.label}</span></div>`;
+            }).join('');
+        }
+
+        function resetWheelUI() {
+            document.getElementById('spinBtn').classList.remove('hidden');
+            document.getElementById('wheelResult').classList.add('hidden');
+            document.getElementById('parentConfirmBtn').disabled = false;
+            document.getElementById('parentConfirmBtn').textContent = '家长确认 ✓';
+            wheelSpinning = false;
+        }
+
+        function openWheelOverlay() {
+            resetWheelUI();
+            const spun = hasSpunWheelToday();
+            const { prize, confirmed } = getWheelData();
+            document.getElementById('spinBtn').classList.toggle('hidden', spun);
+            if (spun && prize) {
+                document.getElementById('wheelResult').classList.remove('hidden');
+                document.getElementById('wheelPrizeText').textContent =
+                    `今天已获得 ${prize.minutes} 分钟游戏时间 🎮`;
+                document.getElementById('parentConfirmBtn').textContent = confirmed ? '已确认 ✓' : '家长确认 ✓';
+                document.getElementById('parentConfirmBtn').disabled = confirmed;
+            }
+            document.getElementById('wheelOverlay').classList.remove('hidden');
+        }
+
+        function closeWheelOverlay() {
+            document.getElementById('wheelOverlay').classList.add('hidden');
+        }
+
+        function spinWheel() {
+            if (wheelSpinning || hasSpunWheelToday()) return;
+            wheelSpinning = true;
+            document.getElementById('spinBtn').disabled = true;
+
+            const n = WHEEL_PRIZES.length;
+            const seg = 360 / n;
+            const index = rand(0, n - 1);
+            wheelPrizeIndex = index;
+            const base = 360 - index * seg - seg / 2;
+            wheelSpinDeg += 360 * 5 + base - (wheelSpinDeg % 360);
+
+            const wheel = document.getElementById('wheel');
+            wheel.style.transform = `rotate(${wheelSpinDeg}deg)`;
+            playTone('start');
+
+            setTimeout(() => {
+                const prize = WHEEL_PRIZES[index];
+                const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+                data.lastWheelDate = getTodayKey();
+                data.lastWheelPrize = { minutes: prize.minutes, label: prize.label };
+                data.wheelConfirmed = false;
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+
+                document.getElementById('spinBtn').classList.add('hidden');
+                document.getElementById('wheelResult').classList.remove('hidden');
+                document.getElementById('wheelPrizeText').textContent =
+                    `获得 ${prize.minutes} 分钟游戏时间 🎮`;
+                document.getElementById('spinBtn').disabled = false;
+                wheelSpinning = false;
+                playTone('correct');
+            }, 4200);
+        }
+
+        function confirmWheelPrize() {
+            const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+            if (data.wheelConfirmed) return;
+            data.wheelConfirmed = true;
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            document.getElementById('parentConfirmBtn').textContent = '已确认 ✓';
+            document.getElementById('parentConfirmBtn').disabled = true;
+            document.getElementById('spinInvite').classList.add('hidden');
+            document.getElementById('openWheelBtn').classList.add('hidden');
+            playTone('correct');
         }
 
         function updateSoundBtn() {
@@ -677,6 +899,8 @@
         }
 
         function switchScreen(id) {
+            document.body.className = id === 'quiz' ? 'quiz-mode'
+                : id === 'result' ? 'result-mode' : 'welcome-mode';
             return new Promise(resolve => {
                 const target = document.getElementById(id);
                 const currentEl = document.querySelector('.screen.active');
@@ -907,7 +1131,12 @@
             document.getElementById('encourageText').textContent = enc.text;
 
             document.getElementById('wrongBtn').classList.toggle('hidden', wrongCount === 0);
-            updateBestBadge();
+            updateStatsLine();
+
+            const perfectCount = isPerfectQuiz(score) ? incrementPerfectCount() : 0;
+            const showWheel = canOfferWheel(score, perfectCount);
+            document.getElementById('spinInvite').classList.toggle('hidden', !showWheel);
+            document.getElementById('openWheelBtn').classList.toggle('hidden', !showWheel);
 
             if (isReview) {
                 document.getElementById('newRecord').classList.add('hidden');
@@ -928,6 +1157,7 @@
 
             if (score >= quizTotal * POINTS * 0.8) launchConfetti();
             if (isNewBest) playTone('start');
+            if (showWheel) setTimeout(openWheelOverlay, 800);
         }
 
         document.querySelectorAll('[data-level]').forEach(btn => {
@@ -936,7 +1166,7 @@
                 document.querySelectorAll('[data-level]').forEach(b => b.classList.remove('selected'));
                 btn.classList.add('selected');
                 saveSettings();
-                updateBestBadge();
+                updateStatsLine();
             });
         });
 
@@ -946,7 +1176,7 @@
                 document.querySelectorAll('[data-mode]').forEach(b => b.classList.remove('selected'));
                 btn.classList.add('selected');
                 saveSettings();
-                updateBestBadge();
+                updateStatsLine();
             });
         });
 
@@ -968,13 +1198,23 @@
         });
         document.getElementById('retryBtn').addEventListener('click', () => startQuiz(false, false));
         document.getElementById('wrongBtn').addEventListener('click', () => startQuiz(true));
-        document.getElementById('homeBtn').addEventListener('click', () => switchScreen('welcome'));
+        document.getElementById('homeBtn').addEventListener('click', () => {
+            closeWheelOverlay();
+            switchScreen('welcome');
+            updateStatsLine();
+        });
         document.getElementById('quitBtn').addEventListener('click', () => {
             if (confirm('确定要退出吗？本次进度不会保存哦～')) {
                 stopTimer();
                 switchScreen('welcome');
             }
         });
+
+        document.getElementById('spinBtn').addEventListener('click', spinWheel);
+        document.getElementById('openWheelBtn').addEventListener('click', openWheelOverlay);
+        document.getElementById('spinInvite').addEventListener('click', openWheelOverlay);
+        document.getElementById('parentConfirmBtn').addEventListener('click', confirmWheelPrize);
+        document.getElementById('wheelCloseBtn').addEventListener('click', closeWheelOverlay);
 
         document.addEventListener('keydown', e => {
             if (!document.getElementById('quiz').classList.contains('active')) return;
@@ -1024,9 +1264,10 @@
 
         loadSettings();
         loadVersion();
+        buildWheel();
 
         const starsEl = document.getElementById('stars');
-        for (let i = 0; i < 50; i++) {
+        for (let i = 0; i < 20; i++) {
             const star = document.createElement('div');
             star.className = 'star';
             const size = Math.random() * 3 + 1;
