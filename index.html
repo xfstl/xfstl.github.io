@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#4a2c7a">
-    <title>Ziang的数学小测试</title>
+    <title>Ziang的口算练习</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         html { -webkit-text-size-adjust: 100%; }
@@ -135,24 +135,30 @@
         }
 
         .question-box {
-            min-height: 130px; display: flex; flex-direction: column; justify-content: center;
-            margin-bottom: 0.5rem;
+            min-height: 110px; display: flex; flex-direction: column; justify-content: center;
+            margin-bottom: 0.25rem;
         }
-        .question-box.animate-in { animation: qSlideIn 0.4s cubic-bezier(0.22, 1, 0.36, 1); }
+        .question-box.animate-in { animation: qSlideIn 0.35s cubic-bezier(0.22, 1, 0.36, 1); }
         @keyframes qSlideIn {
-            from { opacity: 0; transform: translateX(20px); }
+            from { opacity: 0; transform: translateX(16px); }
             to { opacity: 1; transform: translateX(0); }
         }
-        .question-emoji { font-size: 2.75rem; margin-bottom: 0.25rem; animation: emojiPop 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
-        @keyframes emojiPop {
-            0% { transform: scale(0); }
-            70% { transform: scale(1.15); }
-            100% { transform: scale(1); }
+        .oral-equation {
+            display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
+            gap: 0.35rem 0.6rem;
+            font-size: clamp(2.4rem, 11vw, 3.4rem); font-weight: 800;
+            line-height: 1.2; animation: emojiPop 0.4s cubic-bezier(0.22, 1, 0.36, 1);
         }
-        .question-text { font-size: 1.05rem; color: #333; line-height: 1.6; }
-        .question-text .nums {
-            display: block; margin-top: 0.35rem;
-            font-size: clamp(1.6rem, 6vw, 2rem); font-weight: 800; color: #c44dff;
+        .oral-equation .num { color: #333; min-width: 1.2em; text-align: center; }
+        .oral-equation .op-add { color: #51cf66; }
+        .oral-equation .op-sub { color: #ff922b; }
+        .oral-equation .eq { color: #c44dff; }
+        .oral-tip {
+            font-size: 0.8rem; color: #bbb; margin-top: 0.35rem;
+        }
+        @keyframes emojiPop {
+            0% { transform: scale(0.85); opacity: 0.5; }
+            100% { transform: scale(1); opacity: 1; }
         }
 
         .answer-display {
@@ -201,9 +207,9 @@
             display: flex; align-items: center; justify-content: center;
             pointer-events: none; opacity: 0;
         }
-        .feedback.show { animation: feedbackIn 0.55s ease forwards; }
+        .feedback.show { animation: feedbackIn 0.45s ease forwards; }
         @keyframes feedbackIn {
-            0% { opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { opacity: 0; }
+            0% { opacity: 0; } 12% { opacity: 1; } 78% { opacity: 1; } 100% { opacity: 0; }
         }
         .feedback-bubble {
             background: #fff; border-radius: 24px; padding: 1.25rem 2rem;
@@ -283,15 +289,23 @@
         <div class="stars" id="stars"></div>
 
         <div class="screen active" id="welcome">
-            <div class="mascot">🧮</div>
-            <h1 class="title">Ziang的数学小测试</h1>
-            <p class="tagline">一起来挑战加减法吧！</p>
+            <div class="mascot">⚡</div>
+            <h1 class="title">Ziang的口算练习</h1>
+            <p class="tagline">心算加减，越练越快！</p>
             <div class="best-badge" id="bestBadge">🏆 最高分：--</div>
+            <div class="best-badge" id="practiceBadge" style="background:linear-gradient(135deg,#f0f9ff,#e7f5ff);color:#1971c2;margin-top:-0.5rem;">📊 已练 0 组</div>
 
-            <p class="section-label">选择难度</p>
+            <p class="section-label">口算范围</p>
             <div class="difficulty-row">
-                <button class="chip" data-level="20">二十以内</button>
-                <button class="chip selected" data-level="100">一百以内</button>
+                <button class="chip selected" data-level="20">二十以内</button>
+                <button class="chip" data-level="100">一百以内</button>
+            </div>
+
+            <p class="section-label">题型</p>
+            <div class="difficulty-row">
+                <button class="chip selected" data-mode="mix">加减混合</button>
+                <button class="chip" data-mode="add">加法</button>
+                <button class="chip" data-mode="sub">减法</button>
             </div>
 
             <p class="section-label">设置</p>
@@ -300,10 +314,10 @@
             </div>
 
             <ul class="rules">
-                <li>一共 <strong>10</strong> 道题，每题 <strong>10</strong> 分</li>
-                <li>答完看分数，还能复习错题哦 ✨</li>
+                <li>每组 <strong>10</strong> 道口算，心算后填答案</li>
+                <li>练完看分数，错题可再练一遍</li>
             </ul>
-            <button class="btn btn-primary" id="startBtn">开始挑战 🚀</button>
+            <button class="btn btn-primary" id="startBtn">开始口算 ⚡</button>
         </div>
 
         <div class="screen" id="quiz">
@@ -318,8 +332,8 @@
                 <button class="btn btn-ghost" id="quitBtn">退出</button>
             </div>
             <div class="question-box animate-in" id="questionBox">
-                <div class="question-emoji" id="qEmoji"></div>
-                <p class="question-text" id="qText"></p>
+                <div class="oral-equation" id="oralEquation"></div>
+                <p class="oral-tip">心算后填答案</p>
             </div>
             <div class="answer-display empty" id="answerDisplay">?</div>
             <div class="numpad" id="numpad">
@@ -336,7 +350,7 @@
                 <button class="num-key" data-key="0">0</button>
                 <button class="num-key submit" data-key="go" id="numpadGo">下一题</button>
             </div>
-            <p class="hint" id="hintText">点数字键输入答案～</p>
+            <p class="hint" id="hintText">心算出来再点数字～</p>
         </div>
 
         <div class="screen" id="result">
@@ -350,8 +364,8 @@
             <p class="encourage-text" id="encourageText"></p>
             <div class="details" id="detailsList"></div>
             <div class="btn-group">
-                <button class="btn btn-primary" id="retryBtn">再来一次 🔄</button>
-                <button class="btn btn-accent hidden" id="wrongBtn">错题再练 💪</button>
+                <button class="btn btn-primary" id="retryBtn">再练一组 🔄</button>
+                <button class="btn btn-accent hidden" id="wrongBtn">错题重练 💪</button>
                 <button class="btn btn-secondary" id="homeBtn">返回首页</button>
             </div>
         </div>
@@ -372,29 +386,13 @@
         const POINTS = 10;
         const STORAGE_KEY = 'ziang-quiz';
 
-        const ADD_TEMPLATES = [
-            { emoji: '🍎', text: (a, b) => `小 Ziang 有 ${a} 个苹果，妈妈又给了 ${b} 个，现在一共有几个？` },
-            { emoji: '⭐', text: (a, b) => `天上有 ${a} 颗星星，又出现了 ${b} 颗，一共几颗？` },
-            { emoji: '🐰', text: (a, b) => `小兔子采了 ${a} 根胡萝卜，小伙伴又送来 ${b} 根，一共几根？` },
-            { emoji: '🎈', text: (a, b) => `派对上有 ${a} 个气球，又吹了 ${b} 个，现在有几个？` },
-            { emoji: '🍬', text: (a, b) => `罐子里有 ${a} 颗糖果，倒入 ${b} 颗，一共几颗？` },
-            { emoji: '🌸', text: (a, b) => `${a} 朵小红花加上 ${b} 朵，一共多少朵？` },
-        ];
-        const SUB_TEMPLATES = [
-            { emoji: '🍎', text: (a, b) => `桌上有 ${a} 个苹果，Ziang 吃了 ${b} 个，还剩几个？` },
-            { emoji: '🎈', text: (a, b) => `天上有 ${a} 个气球，飞走了 ${b} 个，还剩几个？` },
-            { emoji: '🍬', text: (a, b) => `有 ${a} 颗糖，分给朋友 ${b} 颗，自己还剩几颗？` },
-            { emoji: '🐟', text: (a, b) => `池塘里 ${a} 条鱼，游走 ${b} 条，还剩几条？` },
-            { emoji: '📚', text: (a, b) => `书架上有 ${a} 本书，借走 ${b} 本，还剩几本？` },
-            { emoji: '🌟', text: (a, b) => `${a} 颗星星减去 ${b} 颗，还剩几颗？` },
-        ];
-        const HINTS = ['加油，Ziang 你可以的！💪', '慢慢算，不着急～🐢', '动动小脑筋！🧠', '算对了就点下一题哦 ✨'];
-        const CORRECT_MSGS = ['太棒了！🎉', '答对啦！⭐', '真厉害！👏', 'Ziang 最棒！🌟'];
-        const WRONG_MSGS = ['没关系，继续加油！🌱', '下一题加油！💪', '再想想哦～🐢'];
+        const HINTS = ['心算一下～🧠', '不用笔，靠脑子！💪', '算出来再填 ✨', '口算高手就是你 ⚡'];
+        const CORRECT_MSGS = ['对了！⚡', '口算正确！', '很快哦！👏', '继续！'];
+        const WRONG_MSGS = ['没关系～', '下一题！', '再练就好 💪'];
 
         let questions = [], current = 0, streak = 0, switching = false;
         let quizTotal = TOTAL, answerStr = '';
-        let maxNum = 100, soundOn = true, isReview = false;
+        let maxNum = 20, quizMode = 'mix', soundOn = true, isReview = false;
 
         function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
         function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
@@ -403,20 +401,40 @@
             try {
                 const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
                 soundOn = data.soundOn !== false;
-                maxNum = data.level || 100;
+                maxNum = data.level || 20;
+                quizMode = data.mode || 'mix';
             } catch { /* ignore */ }
             document.querySelectorAll('[data-level]').forEach(el => {
                 el.classList.toggle('selected', +el.dataset.level === maxNum);
             });
+            document.querySelectorAll('[data-mode]').forEach(el => {
+                el.classList.toggle('selected', el.dataset.mode === quizMode);
+            });
             updateSoundBtn();
             updateBestBadge();
+            updatePracticeBadge();
         }
 
         function saveSettings() {
             const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
             data.soundOn = soundOn;
             data.level = maxNum;
+            data.mode = quizMode;
             localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        }
+
+        function updatePracticeBadge() {
+            const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+            const count = data.practiceCount || 0;
+            document.getElementById('practiceBadge').textContent =
+                count > 0 ? `📊 已练 ${count} 组口算` : '📊 开始第一组口算吧！';
+        }
+
+        function incrementPracticeCount() {
+            const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+            data.practiceCount = (data.practiceCount || 0) + 1;
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            updatePracticeBadge();
         }
 
         function getBestScore() {
@@ -473,36 +491,38 @@
             const list = [], used = new Set();
             const cap = maxNum;
             while (list.length < quizTotal) {
-                const isAdd = Math.random() < 0.5;
-                let a, b, answer, template, expr;
+                let isAdd;
+                if (quizMode === 'add') isAdd = true;
+                else if (quizMode === 'sub') isAdd = false;
+                else isAdd = Math.random() < 0.5;
+
+                let a, b, answer, expr;
                 if (isAdd) {
                     a = rand(1, cap - 1);
                     b = rand(1, cap - a);
                     answer = a + b;
-                    template = pick(ADD_TEMPLATES);
                     expr = `${a} + ${b}`;
                 } else {
                     a = rand(1, cap);
                     b = rand(1, a);
                     answer = a - b;
-                    template = pick(SUB_TEMPLATES);
                     expr = `${a} - ${b}`;
                 }
                 if (used.has(expr)) continue;
                 used.add(expr);
-                list.push({ emoji: template.emoji, text: template.text(a, b), expr, answer, userAnswer: null });
+                list.push({ a, b, isAdd, expr, answer, userAnswer: null });
             }
             return list;
         }
 
         function getEncouragement(score) {
             const pct = score / (quizTotal * POINTS) * 100;
-            if (pct === 100) return { emoji: '🌟', text: '太棒了 Ziang！全部正确，你是数学小天才！' };
-            if (pct >= 90) return { emoji: '👏', text: '真厉害！只错了一两题，Ziang 继续加油！' };
-            if (pct >= 80) return { emoji: '😊', text: '做得不错！大部分都对了，再练一次会更好哦！' };
-            if (pct >= 60) return { emoji: '💪', text: '已经有进步啦！多练几题，下次一定能更高！' };
-            if (pct >= 40) return { emoji: '🌱', text: '别灰心，每一题都是练习！Ziang 再试一次，会更棒的！' };
-            return { emoji: '✨', text: '勇敢开始就是胜利！再练一遍，慢慢就会熟练的！' };
+            if (pct === 100) return { emoji: '🌟', text: '全对口算！Ziang 算得又快又准！' };
+            if (pct >= 90) return { emoji: '👏', text: '口算很棒！只错一点点，继续练！' };
+            if (pct >= 80) return { emoji: '😊', text: '大部分口算对了，每天练会更熟练！' };
+            if (pct >= 60) return { emoji: '💪', text: '有进步！多练几组，口算会越来越快！' };
+            if (pct >= 40) return { emoji: '🌱', text: '口算需要多练，别放弃，再来一组！' };
+            return { emoji: '✨', text: '每组练习都有收获，再试一组吧！' };
         }
 
         function getStars(score) {
@@ -537,7 +557,7 @@
 
         function updateProgress() {
             document.getElementById('quizProgress').textContent =
-                `第 ${current + 1} / ${quizTotal} 题` + (isReview ? '（错题）' : '');
+                `口算 ${current + 1} / ${quizTotal}` + (isReview ? '（错题）' : '');
             document.getElementById('progressFill').style.width = `${(current / quizTotal) * 100}%`;
             const streakEl = document.getElementById('streak');
             if (streak >= 2) {
@@ -569,9 +589,13 @@
             void box.offsetWidth;
             box.classList.add('animate-in');
 
-            document.getElementById('qEmoji').textContent = q.emoji;
-            document.getElementById('qText').innerHTML =
-                q.text + '<span class="nums">' + q.expr + ' = ?</span>';
+            const opClass = q.isAdd ? 'op-add' : 'op-sub';
+            const opSym = q.isAdd ? '+' : '−';
+            document.getElementById('oralEquation').innerHTML =
+                `<span class="num">${q.a}</span>` +
+                `<span class="${opClass}">${opSym}</span>` +
+                `<span class="num">${q.b}</span>` +
+                `<span class="eq">= ?</span>`;
 
             answerStr = '';
             const display = document.getElementById('answerDisplay');
@@ -607,7 +631,7 @@
             document.getElementById('feedbackText').textContent = pick(isCorrect ? CORRECT_MSGS : WRONG_MSGS);
             playTone(isCorrect ? 'correct' : 'wrong');
             vibrate(isCorrect ? 'correct' : 'wrong');
-            return new Promise(r => setTimeout(r, 600));
+            return new Promise(r => setTimeout(r, 450));
         }
 
         async function startQuiz(reviewWrong = false) {
@@ -620,6 +644,7 @@
             } else {
                 quizTotal = TOTAL;
                 questions = generateQuestions();
+                if (!isReview) incrementPracticeCount();
             }
             current = 0;
             streak = 0;
@@ -745,7 +770,7 @@
                     : `你的答案：${q.userAnswer} · 正确答案：${q.answer}`;
                 return `<div class="detail-item" style="animation-delay:${i * 0.05}s">
                     <span class="detail-num">${i + 1}</span>
-                    <div><div class="detail-q">${q.emoji} ${q.expr} = ${q.answer}</div>
+                    <div><div class="detail-q">${q.expr} = ${q.answer}</div>
                     <div class="detail-ans">${ansLine}</div></div>${mark}</div>`;
             }).join('');
 
@@ -760,6 +785,15 @@
                 btn.classList.add('selected');
                 saveSettings();
                 updateBestBadge();
+            });
+        });
+
+        document.querySelectorAll('[data-mode]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                quizMode = btn.dataset.mode;
+                document.querySelectorAll('[data-mode]').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                saveSettings();
             });
         });
 
