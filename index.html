@@ -118,7 +118,14 @@
         .quiz-header { margin-bottom: 0.75rem; flex: 1; }
         .quiz-meta {
             display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 0.2rem 0.5rem;
             font-size: 0.85rem; color: #888; margin-bottom: 0.4rem; font-weight: 600;
+        }
+        .quiz-meta .streak { width: 100%; text-align: right; }
+        .quiz-meta .timer {
+            font-variant-numeric: tabular-nums;
+            color: #4dabf7; font-weight: 700;
+            background: #e7f5ff; padding: 0.15rem 0.55rem; border-radius: 8px;
         }
         .streak { color: #ff922b; min-height: 1.1rem; font-size: 0.8rem; }
         .streak.show { animation: popIn 0.4s cubic-bezier(0.22, 1, 0.36, 1); }
@@ -225,19 +232,22 @@
         .feedback.wrong .feedback-text { color: #ff922b; }
 
         /* 结果页 */
-        .score-circle {
-            width: 120px; height: 120px; border-radius: 50%;
-            background: linear-gradient(135deg, #ffd43b, #ff922b);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            margin: 0 auto 0.75rem;
-            box-shadow: 0 8px 24px rgba(255,146,43,0.35);
-            animation: scoreBounce 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+        .grade-summary {
+            display: flex; align-items: center; justify-content: center; gap: 1.25rem;
+            margin-bottom: 0.75rem; animation: scoreBounce 0.7s cubic-bezier(0.22, 1, 0.36, 1);
         }
+        .grade-item { text-align: center; }
+        .grade-val {
+            display: block; font-size: 2.25rem; font-weight: 800; line-height: 1.1;
+        }
+        .grade-item.score .grade-val { color: #ff922b; }
+        .grade-item.time .grade-val { color: #4dabf7; font-variant-numeric: tabular-nums; }
+        .grade-lbl { font-size: 0.85rem; color: #888; font-weight: 600; }
+        .grade-divider { width: 1px; height: 48px; background: #eee; }
+
         @keyframes scoreBounce {
             0% { transform: scale(0); } 60% { transform: scale(1.12); } 100% { transform: scale(1); }
         }
-        .score-num { font-size: 2.5rem; font-weight: 800; color: #fff; line-height: 1; }
-        .score-label { font-size: 0.8rem; color: rgba(255,255,255,0.9); }
 
         .star-row { font-size: 1.75rem; margin-bottom: 0.5rem; letter-spacing: 4px; }
         .star-row .dim { opacity: 0.25; }
@@ -314,8 +324,8 @@
             </div>
 
             <ul class="rules">
-                <li>每组 <strong>10</strong> 道口算，心算后填答案</li>
-                <li>练完看分数，错题可再练一遍</li>
+                <li>每组 <strong>10</strong> 道口算，自动计时</li>
+                <li>成绩 = 分数 + 用时，越高越快越好</li>
             </ul>
             <button class="btn btn-primary" id="startBtn">开始口算 ⚡</button>
         </div>
@@ -324,7 +334,8 @@
             <div class="quiz-top">
                 <div class="quiz-header">
                     <div class="quiz-meta">
-                        <span id="quizProgress">第 1 / 10 题</span>
+                        <span id="quizProgress">口算 1 / 10</span>
+                        <span class="timer" id="quizTimer">0:00</span>
                         <span class="streak" id="streak"></span>
                     </div>
                     <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
@@ -354,9 +365,17 @@
         </div>
 
         <div class="screen" id="result">
-            <div class="score-circle">
-                <span class="score-num" id="scoreNum">0</span>
-                <span class="score-label">分</span>
+            <p class="section-label" style="margin-bottom:0.75rem;">本次成绩</p>
+            <div class="grade-summary">
+                <div class="grade-item score">
+                    <span class="grade-val" id="scoreNum">0</span>
+                    <span class="grade-lbl">分</span>
+                </div>
+                <div class="grade-divider"></div>
+                <div class="grade-item time">
+                    <span class="grade-val" id="timeNum">0</span>
+                    <span class="grade-lbl">用时</span>
+                </div>
             </div>
             <div class="star-row" id="starRow"></div>
             <div class="new-record hidden" id="newRecord">🎉 新纪录！</div>
@@ -393,9 +412,51 @@
         let questions = [], current = 0, streak = 0, switching = false;
         let quizTotal = TOTAL, answerStr = '';
         let maxNum = 20, quizMode = 'mix', soundOn = true, isReview = false;
+        let timerStart = 0, timerInterval = null, elapsedMs = 0;
 
         function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
         function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+        function formatTime(ms) {
+            const totalSec = Math.floor(ms / 1000);
+            const min = Math.floor(totalSec / 60);
+            const sec = totalSec % 60;
+            return min > 0 ? `${min}:${sec.toString().padStart(2, '0')}` : `0:${sec.toString().padStart(2, '0')}`;
+        }
+
+        function formatTimeLabel(ms) {
+            const totalSec = Math.floor(ms / 1000);
+            const min = Math.floor(totalSec / 60);
+            const sec = totalSec % 60;
+            return min > 0 ? `${min}分${sec}秒` : `${sec}秒`;
+        }
+
+        function startTimer() {
+            stopTimer();
+            timerStart = Date.now();
+            elapsedMs = 0;
+            updateTimerDisplay();
+            timerInterval = setInterval(updateTimerDisplay, 200);
+        }
+
+        function stopTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+            if (timerStart) elapsedMs = Date.now() - timerStart;
+            updateTimerDisplay();
+        }
+
+        function updateTimerDisplay() {
+            const ms = timerStart ? Date.now() - timerStart : elapsedMs;
+            const el = document.getElementById('quizTimer');
+            if (el) el.textContent = formatTime(ms);
+        }
+
+        function getRecordKey() {
+            return `record${maxNum}_${quizMode}`;
+        }
 
         function loadSettings() {
             try {
@@ -437,16 +498,23 @@
             updatePracticeBadge();
         }
 
-        function getBestScore() {
+        function getBestRecord() {
             const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-            return data[`best${maxNum}`] || 0;
+            return data[getRecordKey()] || null;
         }
 
-        function setBestScore(score) {
+        function isBetterRecord(score, timeMs, old) {
+            if (!old) return score > 0;
+            if (score > old.score) return true;
+            return score === old.score && timeMs < old.timeMs;
+        }
+
+        function setBestRecord(score, timeMs) {
             const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-            const key = `best${maxNum}`;
-            if (score > (data[key] || 0)) {
-                data[key] = score;
+            const key = getRecordKey();
+            const old = data[key];
+            if (isBetterRecord(score, timeMs, old)) {
+                data[key] = { score, timeMs };
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
                 return true;
             }
@@ -454,9 +522,10 @@
         }
 
         function updateBestBadge() {
-            const best = getBestScore();
-            document.getElementById('bestBadge').textContent =
-                best > 0 ? `🏆 最高分：${best} 分` : '🏆 快来创造第一个纪录吧！';
+            const best = getBestRecord();
+            document.getElementById('bestBadge').textContent = best
+                ? `🏆 最佳：${best.score}分 · ${formatTimeLabel(best.timeMs)}`
+                : '🏆 快来创造第一个纪录吧！';
         }
 
         function updateSoundBtn() {
@@ -515,12 +584,14 @@
             return list;
         }
 
-        function getEncouragement(score) {
+        function getEncouragement(score, timeMs) {
             const pct = score / (quizTotal * POINTS) * 100;
-            if (pct === 100) return { emoji: '🌟', text: '全对口算！Ziang 算得又快又准！' };
-            if (pct >= 90) return { emoji: '👏', text: '口算很棒！只错一点点，继续练！' };
-            if (pct >= 80) return { emoji: '😊', text: '大部分口算对了，每天练会更熟练！' };
-            if (pct >= 60) return { emoji: '💪', text: '有进步！多练几组，口算会越来越快！' };
+            const fast = timeMs <= quizTotal * 5000;
+            if (pct === 100 && fast) return { emoji: '🌟', text: `全对！${formatTimeLabel(timeMs)} 完成，又快又准！` };
+            if (pct === 100) return { emoji: '🌟', text: `全对口算！用时 ${formatTimeLabel(timeMs)}，太棒了！` };
+            if (pct >= 90) return { emoji: '👏', text: `口算很棒！${score} 分，用时 ${formatTimeLabel(timeMs)}` };
+            if (pct >= 80) return { emoji: '😊', text: `大部分对了！${score} 分 · ${formatTimeLabel(timeMs)}` };
+            if (pct >= 60) return { emoji: '💪', text: '有进步！多练几组，速度和准确率都会提高！' };
             if (pct >= 40) return { emoji: '🌱', text: '口算需要多练，别放弃，再来一组！' };
             return { emoji: '✨', text: '每组练习都有收获，再试一组吧！' };
         }
@@ -649,6 +720,7 @@
             current = 0;
             streak = 0;
             await switchScreen('quiz');
+            startTimer();
             renderQuestion();
         }
 
@@ -741,18 +813,21 @@
         }
 
         async function showResult() {
+            stopTimer();
+
             let score = 0;
             questions.forEach(q => {
                 q.correct = q.userAnswer === q.answer;
                 if (q.correct) score += POINTS;
             });
 
-            const enc = getEncouragement(score);
-            const isNewBest = !isReview && setBestScore(score);
+            const enc = getEncouragement(score, elapsedMs);
+            const isNewBest = !isReview && setBestRecord(score, elapsedMs);
             const wrongCount = questions.filter(q => !q.correct).length;
 
             await switchScreen('result');
             animateScore(score);
+            document.getElementById('timeNum').textContent = formatTimeLabel(elapsedMs);
             renderStars(getStars(score));
             document.getElementById('newRecord').classList.toggle('hidden', !isNewBest);
             document.getElementById('encourageEmoji').textContent = enc.emoji;
@@ -794,6 +869,7 @@
                 document.querySelectorAll('[data-mode]').forEach(b => b.classList.remove('selected'));
                 btn.classList.add('selected');
                 saveSettings();
+                updateBestBadge();
             });
         });
 
@@ -817,7 +893,10 @@
         document.getElementById('wrongBtn').addEventListener('click', () => startQuiz(true));
         document.getElementById('homeBtn').addEventListener('click', () => switchScreen('welcome'));
         document.getElementById('quitBtn').addEventListener('click', () => {
-            if (confirm('确定要退出吗？本次进度不会保存哦～')) switchScreen('welcome');
+            if (confirm('确定要退出吗？本次进度不会保存哦～')) {
+                stopTimer();
+                switchScreen('welcome');
+            }
         });
 
         document.addEventListener('keydown', e => {
