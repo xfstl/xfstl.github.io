@@ -7,7 +7,7 @@
       "Good night!",
       "Good morning!",
       "Goodbye!",
-      "Sorry!"
+      "Good evening!"
     ],
     "answer": 1,
     "heard": "Good morning!",
@@ -18,10 +18,10 @@
     "tag": "感谢",
     "prompt": "别人帮了你，你想表示感谢。最自然地说：",
     "options": [
-      "Goodbye.",
-      "Hello.",
+      "Goodbye for now.",
+      "Hello there.",
       "Thank you.",
-      "No."
+      "Sorry about that."
     ],
     "answer": 2
   },
@@ -30,9 +30,9 @@
     "tag": "感谢",
     "prompt": "对方说了这句话：",
     "options": [
-      "Sorry.",
-      "Hello.",
-      "Please.",
+      "I'm sorry.",
+      "Hello there.",
+      "Yes, please.",
       "You're welcome."
     ],
     "answer": 3,
@@ -46,8 +46,8 @@
     "options": [
       "Nice to meet you!",
       "See you tomorrow!",
-      "Good night!",
-      "Excuse me?"
+      "Long time no see!",
+      "How have you been?"
     ],
     "answer": 0
   },
@@ -58,8 +58,8 @@
     "options": [
       "Good morning!",
       "Goodbye!",
-      "How are you?",
-      "Thank you!"
+      "Nice to meet you!",
+      "Welcome back!"
     ],
     "answer": 1
   },
@@ -68,10 +68,10 @@
     "tag": "问候",
     "prompt": "想问对方「你好吗？」你会说：",
     "options": [
-      "What is it?",
-      "Where are you?",
+      "What is your name?",
+      "Where are you from?",
       "How are you?",
-      "Who is it?"
+      "How old are you?"
     ],
     "answer": 2
   },
@@ -80,8 +80,8 @@
     "tag": "问候",
     "prompt": "对方问了你：",
     "options": [
-      "Good night!",
-      "See you!",
+      "Good night, sir!",
+      "See you tomorrow!",
       "Nice to meet you!",
       "I'm fine, thank you!"
     ],
@@ -95,9 +95,9 @@
     "prompt": "口渴了，想礼貌地要一杯水：",
     "options": [
       "Can I have some water, please?",
-      "I am water.",
-      "Water is good.",
-      "Good morning!"
+      "Can I have some milk, please?",
+      "Can I have some juice, please?",
+      "Can I have some bread, please?"
     ],
     "answer": 0
   },
@@ -108,8 +108,8 @@
     "options": [
       "Thank you!",
       "Sorry!",
-      "Hello!",
-      "Yes!"
+      "Excuse me!",
+      "Goodbye!"
     ],
     "answer": 1
   },
@@ -121,7 +121,7 @@
       "Good night!",
       "I am tired.",
       "Let's play!",
-      "See you!"
+      "I have to go."
     ],
     "answer": 2
   },
@@ -130,9 +130,9 @@
     "tag": "饮食",
     "prompt": "在餐厅想点一份米饭：",
     "options": [
-      "I am rice.",
-      "Rice is red.",
-      "Goodbye!",
+      "I'd like some noodles, please.",
+      "I'd like some bread, please.",
+      "I'd like some soup, please.",
       "I'd like some rice, please."
     ],
     "answer": 3
@@ -143,9 +143,9 @@
     "prompt": "对方问了你：",
     "options": [
       "My name is Ziang.",
-      "I am fine.",
-      "Thank you.",
-      "Good night!"
+      "I am eight years old.",
+      "I'm from Beijing.",
+      "I'm in Grade Two."
     ],
     "answer": 0,
     "heard": "What's your name?",
@@ -156,10 +156,10 @@
     "tag": "问候",
     "prompt": "下午在学校遇见同学，你想打招呼：",
     "options": [
-      "Good night!",
+      "Good evening!",
       "Good afternoon!",
-      "Goodbye!",
-      "See you!"
+      "Good night!",
+      "Good morning!"
     ],
     "answer": 1
   },
@@ -171,7 +171,7 @@
       "Good morning!",
       "Good afternoon!",
       "Good night!",
-      "Hello!"
+      "Good evening!"
     ],
     "answer": 2
   },
@@ -181,8 +181,8 @@
     "prompt": "对方说的是：",
     "options": [
       "Goodbye!",
-      "Sorry!",
-      "No.",
+      "See you later!",
+      "Good night!",
       "Hello!"
     ],
     "answer": 3,
@@ -196,8 +196,8 @@
     "options": [
       "Hi!",
       "Bye!",
-      "No!",
-      "Sleep!"
+      "Wow!",
+      "Hooray!"
     ],
     "answer": 0
   },
@@ -208,8 +208,8 @@
     "options": [
       "Bye!",
       "Hi!",
-      "Sorry!",
-      "Help!"
+      "Wow!",
+      "Oops!"
     ],
     "answer": 1,
     "heard": "Hi!",
@@ -221,9 +221,9 @@
     "prompt": "放学路上遇见邻居，想问好：",
     "options": [
       "Good night!",
-      "Thank you!",
+      "See you later!",
       "Hello!",
-      "Sorry!"
+      "Goodbye!"
     ],
     "answer": 2
   },
@@ -233,8 +233,8 @@
     "prompt": "对方说的是：",
     "options": [
       "Good night!",
-      "Goodbye!",
-      "Sorry!",
+      "Good morning!",
+      "Good evening!",
       "Good afternoon!"
     ],
     "answer": 3,
@@ -248,8 +248,8 @@
     "options": [
       "Hello, teacher!",
       "Goodbye, teacher!",
-      "Sorry, teacher!",
-      "No, teacher!"
+      "Good night, teacher!",
+      "See you, teacher!"
     ],
     "answer": 0
   },
@@ -258,10 +258,10 @@
     "tag": "问候",
     "prompt": "对方说的是：",
     "options": [
-      "I am fine.",
+      "I am eight years old.",
       "How do you do?",
-      "Good night!",
-      "See you!"
+      "Nice to meet you!",
+      "See you later!"
     ],
     "answer": 1,
     "heard": "How do you do?",
@@ -272,10 +272,10 @@
     "tag": "问候",
     "prompt": "很久没见的朋友，你想问近况：",
     "options": [
-      "What color?",
-      "How old?",
+      "What is your name?",
+      "How old are you?",
       "How are you?",
-      "Where book?"
+      "Where are you from?"
     ],
     "answer": 2
   },
@@ -285,8 +285,8 @@
     "prompt": "对方说的是：",
     "options": [
       "Good night!",
-      "Goodbye!",
-      "Sorry!",
+      "See you tomorrow!",
+      "Nice to meet you!",
       "I'm fine, too."
     ],
     "answer": 3,
@@ -299,9 +299,9 @@
     "prompt": "课间遇到外国小朋友，想友好打招呼：",
     "options": [
       "Nice to see you!",
-      "Go away!",
-      "I am angry.",
-      "Stop it!"
+      "See you later!",
+      "Goodbye for now!",
+      "Take care!"
     ],
     "answer": 0
   },
@@ -310,10 +310,10 @@
     "tag": "问候",
     "prompt": "对方说的是：",
     "options": [
-      "Good night!",
+      "Good night to you!",
       "Nice to see you, too!",
-      "Sorry!",
-      "No!"
+      "See you tomorrow!",
+      "Goodbye for now!"
     ],
     "answer": 1,
     "heard": "Nice to see you!",
@@ -325,9 +325,9 @@
     "prompt": "早读前想跟同桌说早上好：",
     "options": [
       "Good night!",
-      "Goodbye!",
+      "Good evening!",
       "Good morning!",
-      "Thank you!"
+      "Good afternoon!"
     ],
     "answer": 2
   },
@@ -337,8 +337,8 @@
     "prompt": "对方说的是：",
     "options": [
       "Good morning!",
-      "Goodbye!",
-      "Sorry!",
+      "Good night!",
+      "Good afternoon!",
       "Good evening!"
     ],
     "answer": 3,
@@ -351,9 +351,9 @@
     "prompt": "想问问同学今天过得怎么样：",
     "options": [
       "How are you today?",
-      "What is today?",
-      "Where today?",
-      "Who today?"
+      "What did you do today?",
+      "Where are you going today?",
+      "Who is with you today?"
     ],
     "answer": 0
   },
@@ -362,10 +362,10 @@
     "tag": "问候",
     "prompt": "对方说的是：",
     "options": [
-      "Good night!",
+      "Good night to you!",
       "Long time no see!",
-      "Sorry!",
-      "No!"
+      "See you tomorrow!",
+      "Goodbye for now!"
     ],
     "answer": 1,
     "heard": "Long time no see!",
@@ -377,9 +377,9 @@
     "prompt": "进教室时想跟全班问好：",
     "options": [
       "Goodbye, everyone!",
-      "Sorry, everyone!",
+      "See you later, everyone!",
       "Hello, everyone!",
-      "No, everyone!"
+      "Good night, everyone!"
     ],
     "answer": 2
   },
@@ -388,9 +388,9 @@
     "tag": "感谢",
     "prompt": "同学借给你橡皮，你想谢谢他：",
     "options": [
-      "Goodbye!",
-      "Sorry!",
-      "No!",
+      "Goodbye for now!",
+      "Sorry about that!",
+      "Excuse me, please!",
       "Thank you very much!"
     ],
     "answer": 3
@@ -401,9 +401,9 @@
     "prompt": "对方说的是：",
     "options": [
       "You're welcome.",
-      "Sorry.",
-      "Goodbye.",
-      "Hello."
+      "I'm sorry.",
+      "Goodbye for now.",
+      "Excuse me, please."
     ],
     "answer": 0,
     "heard": "Thank you so much!",
@@ -417,7 +417,7 @@
       "Sorry, teacher!",
       "Thank you, teacher!",
       "Goodbye, teacher!",
-      "No, teacher!"
+      "Hello, teacher!"
     ],
     "answer": 1
   },
@@ -429,7 +429,7 @@
       "Sorry, Mom!",
       "Goodbye, Mom!",
       "Thanks, Mom!",
-      "No, Mom!"
+      "See you, Mom!"
     ],
     "answer": 2
   },
@@ -438,9 +438,9 @@
     "tag": "感谢",
     "prompt": "对方说的是：",
     "options": [
-      "Sorry.",
-      "Goodbye.",
-      "Hello.",
+      "I'm sorry.",
+      "Goodbye for now.",
+      "See you later.",
       "No problem."
     ],
     "answer": 3,
@@ -453,9 +453,9 @@
     "prompt": "朋友送你生日礼物，你想说：",
     "options": [
       "Thank you for the gift!",
-      "Sorry for the gift!",
-      "Goodbye for the gift!",
-      "No for the gift!"
+      "I love the gift!",
+      "Wow, what a nice gift!",
+      "I really like this gift!"
     ],
     "answer": 0
   },
@@ -464,10 +464,10 @@
     "tag": "感谢",
     "prompt": "对方说的是：",
     "options": [
-      "Sorry.",
+      "I'm sorry.",
       "My pleasure.",
-      "Goodbye.",
-      "Hello."
+      "Goodbye for now.",
+      "See you later."
     ],
     "answer": 1,
     "heard": "Thank you for your help!",
@@ -478,10 +478,10 @@
     "tag": "感谢",
     "prompt": "同学帮你解答了难题，你想说：",
     "options": [
-      "Sorry for your help!",
-      "Goodbye for your help!",
+      "Sorry for the trouble!",
+      "I owe you one!",
       "Thanks for your help!",
-      "No for your help!"
+      "You are really smart!"
     ],
     "answer": 2
   },
@@ -490,9 +490,9 @@
     "tag": "感谢",
     "prompt": "对方说的是：",
     "options": [
-      "Sorry.",
-      "Goodbye.",
-      "Please.",
+      "I'm sorry.",
+      "Goodbye for now.",
+      "Yes, please.",
       "You're welcome."
     ],
     "answer": 3,
@@ -505,9 +505,9 @@
     "prompt": "爸爸开车送你上学，下车时你想说：",
     "options": [
       "Thank you, Dad!",
-      "Sorry, Dad!",
+      "See you later, Dad!",
       "Goodbye, Dad!",
-      "No, Dad!"
+      "Have a good day, Dad!"
     ],
     "answer": 0
   },
@@ -516,10 +516,10 @@
     "tag": "感谢",
     "prompt": "对方说的是：",
     "options": [
-      "Sorry.",
+      "I'm sorry.",
       "Glad to help.",
-      "Goodbye.",
-      "Hello."
+      "Goodbye for now.",
+      "See you later."
     ],
     "answer": 1,
     "heard": "Thank you for coming!",
@@ -533,7 +533,7 @@
       "Sorry, nurse!",
       "Goodbye, nurse!",
       "Thank you, nurse!",
-      "No, nurse!"
+      "Hello, nurse!"
     ],
     "answer": 2
   },
@@ -542,9 +542,9 @@
     "tag": "学校",
     "prompt": "上课想举手回答问题，你会说：",
     "options": [
-      "I am answer.",
-      "Answer is good.",
-      "Good morning!",
+      "May I ask a question?",
+      "May I leave my seat?",
+      "May I go to the toilet?",
       "May I answer?"
     ],
     "answer": 3
@@ -554,10 +554,10 @@
     "tag": "学校",
     "prompt": "老师说的是：",
     "options": [
-      "OK.",
-      "No.",
-      "Goodbye.",
-      "Sorry."
+      "OK, teacher.",
+      "Not yet, teacher.",
+      "Goodbye, teacher.",
+      "Sorry, teacher."
     ],
     "answer": 0,
     "heard": "Open your books, please.",
@@ -568,10 +568,10 @@
     "tag": "学校",
     "prompt": "找不到铅笔了，想问同桌：",
     "options": [
-      "I am a pencil.",
+      "Do you have an eraser?",
       "Do you have a pencil?",
-      "Pencil is red.",
-      "Good night!"
+      "Do you have a ruler?",
+      "Do you have a book?"
     ],
     "answer": 1
   },
@@ -580,10 +580,10 @@
     "tag": "学校",
     "prompt": "老师说的是：",
     "options": [
-      "Not now.",
-      "Goodbye.",
-      "OK.",
-      "Sorry."
+      "Not yet, teacher.",
+      "Goodbye, teacher.",
+      "OK, teacher.",
+      "Sorry, teacher."
     ],
     "answer": 2,
     "heard": "Sit down, please.",
@@ -594,9 +594,9 @@
     "tag": "学校",
     "prompt": "想告诉老师作业写完了：",
     "options": [
-      "I am homework.",
-      "Homework is good.",
-      "Goodbye!",
+      "I forgot my homework.",
+      "I lost my homework.",
+      "I left my homework at home.",
       "I finished my homework."
     ],
     "answer": 3
@@ -606,10 +606,10 @@
     "tag": "学校",
     "prompt": "老师说的是：",
     "options": [
-      "OK.",
-      "Not now.",
-      "Maybe later.",
-      "Sorry."
+      "OK, teacher.",
+      "Not now, teacher.",
+      "Goodbye, teacher.",
+      "Sorry, teacher."
     ],
     "answer": 0,
     "heard": "Stand up, please.",
@@ -620,10 +620,10 @@
     "tag": "学校",
     "prompt": "想借同学的尺子：",
     "options": [
-      "I am your ruler.",
+      "Can I use your pencil?",
       "Can I use your ruler?",
-      "Ruler is big.",
-      "Good night!"
+      "Can I use your book?",
+      "Can I use your eraser?"
     ],
     "answer": 1
   },
@@ -632,10 +632,10 @@
     "tag": "学校",
     "prompt": "老师说的是：",
     "options": [
-      "Not now.",
-      "Maybe later.",
-      "OK.",
-      "I think not."
+      "Not now, teacher.",
+      "Goodbye, teacher.",
+      "OK, teacher.",
+      "Sorry, teacher."
     ],
     "answer": 2,
     "heard": "Be quiet, please.",
@@ -1284,10 +1284,10 @@
     "tag": "饮食",
     "prompt": "想问问这是什么菜：",
     "options": [
-      "I am dish.",
+      "I love spicy dishes.",
       "What is this dish?",
-      "Dish is good.",
-      "Good morning!"
+      "The dish smells nice.",
+      "Please pass the rice."
     ],
     "answer": 1
   },
@@ -1296,10 +1296,10 @@
     "tag": "饮食",
     "prompt": "对方说的是：",
     "options": [
-      "Yes, goodbye.",
-      "I am soup.",
+      "Yes, I love it.",
+      "The soup is hot.",
       "No, thank you.",
-      "Good night!"
+      "I made it myself."
     ],
     "answer": 2,
     "heard": "Would you like some soup?",
@@ -1310,9 +1310,9 @@
     "tag": "饮食",
     "prompt": "想点一份鸡蛋：",
     "options": [
-      "I am egg.",
-      "Egg is red.",
-      "Goodbye!",
+      "I had an egg today.",
+      "The egg is fresh.",
+      "I love fried eggs.",
       "I'd like an egg, please."
     ],
     "answer": 3
@@ -1323,9 +1323,9 @@
     "prompt": "想告诉朋友你渴了：",
     "options": [
       "I'm thirsty.",
-      "I am thirsty.",
-      "Thirsty is good.",
-      "Good morning!"
+      "I'm so full.",
+      "I love water.",
+      "I had a drink."
     ],
     "answer": 0
   },
@@ -1334,10 +1334,10 @@
     "tag": "饮食",
     "prompt": "对方说的是：",
     "options": [
-      "Goodbye.",
+      "I love salt.",
       "Here you are.",
-      "Sorry.",
-      "No."
+      "It tastes good.",
+      "Salt is white."
     ],
     "answer": 1,
     "heard": "Pass the salt, please.",
@@ -1348,10 +1348,10 @@
     "tag": "饮食",
     "prompt": "在水果店想买香蕉：",
     "options": [
-      "I am bananas.",
-      "Bananas are good.",
+      "I ate two bananas.",
+      "Bananas are yellow.",
       "I want some bananas.",
-      "Good night!"
+      "I like fresh fruit."
     ],
     "answer": 2
   },
@@ -1360,9 +1360,9 @@
     "tag": "请求",
     "prompt": "想请同学帮你开门：",
     "options": [
-      "I am door.",
-      "Door is good.",
-      "Good morning!",
+      "The door is open.",
+      "I closed the door.",
+      "I forgot my key.",
       "Can you open the door?"
     ],
     "answer": 3
@@ -1373,9 +1373,9 @@
     "prompt": "对方说的是：",
     "options": [
       "Sure!",
-      "No, goodbye.",
-      "I am help.",
-      "Good night!"
+      "I need help.",
+      "I am busy now.",
+      "Help is good."
     ],
     "answer": 0,
     "heard": "Can you help me?",
@@ -1386,10 +1386,10 @@
     "tag": "请求",
     "prompt": "想借同学的胶棒：",
     "options": [
-      "I am glue.",
+      "I lost my glue stick.",
       "May I use your glue stick?",
-      "Glue is good.",
-      "Goodbye!"
+      "The glue is sticky.",
+      "I bought a glue stick."
     ],
     "answer": 1
   },
@@ -1398,10 +1398,10 @@
     "tag": "请求",
     "prompt": "想请老师再说一遍：",
     "options": [
-      "I am again.",
-      "Again is good.",
+      "I didn't hear well.",
+      "I have a question.",
       "Could you say it again?",
-      "Good morning!"
+      "Please speak slowly."
     ],
     "answer": 2
   },
@@ -1410,9 +1410,9 @@
     "tag": "请求",
     "prompt": "对方说的是：",
     "options": [
-      "Go away.",
-      "I am come.",
-      "Good night!",
+      "Please go away.",
+      "I am late today.",
+      "The door is open.",
       "Come in, please."
     ],
     "answer": 3,
@@ -1425,9 +1425,9 @@
     "prompt": "想请妈妈帮你拿书包：",
     "options": [
       "Can you get my bag?",
-      "I am bag.",
-      "Bag is good.",
-      "Goodbye!"
+      "I forgot my bag.",
+      "My bag is heavy.",
+      "I lost my bag."
     ],
     "answer": 0
   },
@@ -1436,10 +1436,10 @@
     "tag": "请求",
     "prompt": "想请求去喝水：",
     "options": [
-      "I am drink.",
+      "I'm so thirsty.",
       "May I get a drink?",
-      "Drink is good.",
-      "Good morning!"
+      "Water is healthy.",
+      "I had some water."
     ],
     "answer": 1
   },
@@ -1448,10 +1448,10 @@
     "tag": "请求",
     "prompt": "对方说的是：",
     "options": [
-      "No, go away.",
-      "I am sit.",
+      "I am sitting here.",
+      "The seat is hard.",
       "Yes, please.",
-      "Good night!"
+      "I will stand up."
     ],
     "answer": 2,
     "heard": "Can I sit here?",
@@ -1462,9 +1462,9 @@
     "tag": "请求",
     "prompt": "想请同学小声一点：",
     "options": [
-      "I am quiet.",
-      "Quiet is good.",
-      "Goodbye!",
+      "I love quiet places.",
+      "The room is loud.",
+      "I can't hear you.",
       "Please be quiet."
     ],
     "answer": 3
@@ -1475,9 +1475,9 @@
     "prompt": "想请别人帮你捡笔：",
     "options": [
       "Can you pick up my pen?",
-      "I am pen.",
-      "Pen is good.",
-      "Good morning!"
+      "I dropped my pen.",
+      "The pen is broken.",
+      "My pen is blue."
     ],
     "answer": 0
   },
@@ -1486,10 +1486,10 @@
     "tag": "请求",
     "prompt": "对方说的是：",
     "options": [
-      "Not now.",
+      "I love that book.",
       "Here you are.",
-      "Sorry.",
-      "No."
+      "The book is thick.",
+      "I read it yesterday."
     ],
     "answer": 1,
     "heard": "Could you pass me the book?",
@@ -1500,10 +1500,10 @@
     "tag": "请求",
     "prompt": "想请求用一下洗手间：",
     "options": [
-      "I am bathroom.",
-      "Bathroom is good.",
+      "The bathroom is clean.",
+      "I washed my hands.",
       "May I use the bathroom?",
-      "Good night!"
+      "I need a tissue."
     ],
     "answer": 2
   },
@@ -1512,9 +1512,9 @@
     "tag": "请求",
     "prompt": "想请爸爸帮你修玩具：",
     "options": [
-      "I am toy.",
-      "Toy is good.",
-      "Good morning!",
+      "I broke my toy.",
+      "The toy is new.",
+      "I love my toys.",
       "Can you fix my toy?"
     ],
     "answer": 3
@@ -1525,9 +1525,9 @@
     "prompt": "对方说的是：",
     "options": [
       "Sure, here you are.",
-      "No, go away.",
-      "I am eraser.",
-      "Good night!"
+      "I lost my eraser.",
+      "The eraser is pink.",
+      "I have a new one."
     ],
     "answer": 0,
     "heard": "Can I borrow your eraser?",
@@ -1538,10 +1538,10 @@
     "tag": "请求",
     "prompt": "想请同学和你一组：",
     "options": [
-      "I am partners.",
+      "I have a partner.",
       "Can we be partners?",
-      "Partners are good.",
-      "Goodbye!"
+      "Partners work hard.",
+      "I work alone today."
     ],
     "answer": 1
   },
@@ -1550,10 +1550,10 @@
     "tag": "请求",
     "prompt": "想请求再玩五分钟：",
     "options": [
-      "I am minutes.",
-      "Minutes are good.",
+      "I played for an hour.",
+      "Five minutes is short.",
       "Can I play five more minutes?",
-      "Good morning!"
+      "I need a break."
     ],
     "answer": 2
   },
@@ -1562,9 +1562,9 @@
     "tag": "请求",
     "prompt": "对方说的是：",
     "options": [
-      "Yes, goodbye.",
-      "I am phone.",
-      "Good night!",
+      "I like your phone.",
+      "My phone is new.",
+      "Let me call you.",
       "Sorry, not now."
     ],
     "answer": 3,
@@ -1577,9 +1577,9 @@
     "prompt": "想请老师看看你的画：",
     "options": [
       "Can you look at my drawing?",
-      "I am drawing.",
-      "Drawing is good.",
-      "Goodbye!"
+      "I finished my drawing.",
+      "I love drawing pictures.",
+      "The drawing is colorful."
     ],
     "answer": 0
   },
@@ -1588,10 +1588,10 @@
     "tag": "请求",
     "prompt": "想请奶奶帮你系鞋带：",
     "options": [
-      "I am shoes.",
+      "My shoes are new.",
       "Can you tie my shoes?",
-      "Shoes are good.",
-      "Good morning!"
+      "I like these shoes.",
+      "The shoes are too big."
     ],
     "answer": 1
   },
@@ -1600,10 +1600,10 @@
     "tag": "请求",
     "prompt": "对方说的是：",
     "options": [
-      "No, goodbye.",
-      "I am wait.",
+      "I'm in a hurry.",
+      "Where are you going?",
       "Sure, I will wait.",
-      "Good night!"
+      "It won't take long."
     ],
     "answer": 2,
     "heard": "Can you wait for me?",
@@ -1614,9 +1614,9 @@
     "tag": "请求",
     "prompt": "想请店员拿小号的衣服：",
     "options": [
-      "I am small.",
-      "Small is good.",
-      "Goodbye!",
+      "This shirt looks nice.",
+      "The color is pretty.",
+      "I like this one.",
       "Can I try size small?"
     ],
     "answer": 3
@@ -1627,9 +1627,9 @@
     "prompt": "想请求打开窗户：",
     "options": [
       "May I open the window?",
-      "I am window.",
-      "Window is good.",
-      "Good morning!"
+      "The window is closed.",
+      "It's warm outside.",
+      "I can see the sky."
     ],
     "answer": 0
   },
@@ -1638,10 +1638,10 @@
     "tag": "介绍",
     "prompt": "想告诉别人你来自北京：",
     "options": [
-      "I am Beijing.",
+      "I love Beijing.",
       "I'm from Beijing.",
-      "Beijing is good.",
-      "Good night!"
+      "Beijing is very big.",
+      "I visited Beijing."
     ],
     "answer": 1
   },
@@ -1650,10 +1650,10 @@
     "tag": "介绍",
     "prompt": "对方说的是：",
     "options": [
-      "I am fine.",
-      "Good night.",
+      "I feel great today.",
+      "My birthday is soon.",
       "I'm eight years old.",
-      "Thank you."
+      "I like my school."
     ],
     "answer": 2,
     "heard": "How old are you?",
@@ -1664,9 +1664,9 @@
     "tag": "介绍",
     "prompt": "想介绍这是你妹妹：",
     "options": [
-      "I am sister.",
-      "Sister is good.",
-      "Good morning!",
+      "I love my sister.",
+      "She is very cute.",
+      "We look the same.",
       "This is my sister."
     ],
     "answer": 3
@@ -1677,9 +1677,9 @@
     "prompt": "对方说的是：",
     "options": [
       "I'm from Shanghai.",
-      "I am fine.",
-      "Good night.",
-      "Thank you."
+      "I like Shanghai a lot.",
+      "Shanghai is beautiful.",
+      "I went to Shanghai."
     ],
     "answer": 0,
     "heard": "Where are you from?",
@@ -1690,10 +1690,10 @@
     "tag": "介绍",
     "prompt": "想告诉新同学你在一年级：",
     "options": [
-      "I am grade.",
+      "I love my school.",
       "I'm in Grade One.",
-      "Grade is good.",
-      "Goodbye!"
+      "My teacher is nice.",
+      "I go to school daily."
     ],
     "answer": 1
   },
@@ -1702,10 +1702,10 @@
     "tag": "介绍",
     "prompt": "对方说的是：",
     "options": [
-      "I am dad.",
-      "Dad is good.",
+      "I look like my dad.",
+      "My dad works hard.",
       "He's my dad.",
-      "Good night!"
+      "We live together."
     ],
     "answer": 2,
     "heard": "Who is he?",
@@ -1716,9 +1716,9 @@
     "tag": "介绍",
     "prompt": "想介绍你的宠物猫：",
     "options": [
-      "I am cat.",
-      "Cat is good.",
-      "Good morning!",
+      "I love cats a lot.",
+      "The cat is sleeping.",
+      "Cats like to play.",
       "This is my cat."
     ],
     "answer": 3
@@ -1729,9 +1729,9 @@
     "prompt": "对方说的是：",
     "options": [
       "I'm in Class Two.",
-      "I am fine.",
-      "Good night.",
-      "Thank you."
+      "I like my class.",
+      "Our class is fun.",
+      "We have many classes."
     ],
     "answer": 0,
     "heard": "What class are you in?",
@@ -1742,10 +1742,10 @@
     "tag": "介绍",
     "prompt": "想告诉别人你喜欢足球：",
     "options": [
-      "I am football.",
+      "I play after school.",
       "I like football.",
-      "Football is good.",
-      "Goodbye!"
+      "Football is exciting.",
+      "I watched a game."
     ],
     "answer": 1
   },
@@ -1754,10 +1754,10 @@
     "tag": "介绍",
     "prompt": "对方说的是：",
     "options": [
-      "No, goodbye.",
-      "I am bag.",
+      "I like that bag.",
+      "The bag is heavy.",
       "Yes, it is.",
-      "Good night!"
+      "I found a bag."
     ],
     "answer": 2,
     "heard": "Is this your bag?",
@@ -1768,9 +1768,9 @@
     "tag": "介绍",
     "prompt": "想介绍你的好朋友 Lily：",
     "options": [
-      "I am Lily.",
-      "Lily is good.",
-      "Good morning!",
+      "Lily sits next to me.",
+      "I play with Lily.",
+      "Lily is very kind.",
       "This is my friend Lily."
     ],
     "answer": 3
@@ -1781,9 +1781,9 @@
     "prompt": "对方说的是：",
     "options": [
       "Yes, I have one brother.",
-      "No, goodbye.",
-      "I am brother.",
-      "Good night!"
+      "I play with him.",
+      "He goes to my school.",
+      "We share a room."
     ],
     "answer": 0,
     "heard": "Do you have brothers?",
@@ -1794,10 +1794,10 @@
     "tag": "介绍",
     "prompt": "想告诉别人你九岁了：",
     "options": [
-      "I am nine.",
+      "I like being nine.",
       "I'm nine.",
-      "Nine is good.",
-      "Goodbye!"
+      "My birthday was fun.",
+      "I grew taller this year."
     ],
     "answer": 1
   },
@@ -1806,10 +1806,10 @@
     "tag": "介绍",
     "prompt": "对方说的是：",
     "options": [
-      "I am drawing.",
-      "Drawing is good.",
+      "I draw every day.",
+      "Drawing is relaxing.",
       "I like drawing.",
-      "Good night!"
+      "I have many colors."
     ],
     "answer": 2,
     "heard": "What do you like?",
@@ -1820,9 +1820,9 @@
     "tag": "介绍",
     "prompt": "想介绍你的英语老师：",
     "options": [
-      "I am teacher.",
-      "Teacher is good.",
-      "Good morning!",
+      "I love English class.",
+      "My teacher is kind.",
+      "English is my favorite.",
       "She is my English teacher."
     ],
     "answer": 3
@@ -1833,9 +1833,9 @@
     "prompt": "对方说的是：",
     "options": [
       "Nice to meet you, too!",
-      "Good night!",
-      "Sorry!",
-      "No!"
+      "I am happy today.",
+      "You look familiar.",
+      "What is your name?"
     ],
     "answer": 0,
     "heard": "Nice to meet you!",
@@ -1846,10 +1846,10 @@
     "tag": "介绍",
     "prompt": "想告诉别人你住在这附近：",
     "options": [
-      "I am near.",
+      "I walk to school.",
       "I live near here.",
-      "Near is good.",
-      "Goodbye!"
+      "The park is nearby.",
+      "My house is small."
     ],
     "answer": 1
   },
@@ -1858,10 +1858,10 @@
     "tag": "介绍",
     "prompt": "对方说的是：",
     "options": [
-      "Not now.",
-      "I am fine.",
+      "I go to that school.",
+      "I study every day.",
       "Yes, I am.",
-      "Good night!"
+      "My school is close."
     ],
     "answer": 2,
     "heard": "Are you a student?",
@@ -1872,9 +1872,9 @@
     "tag": "道别",
     "prompt": "放学跟同学说回头见：",
     "options": [
-      "Good morning!",
-      "Thank you!",
-      "Sorry!",
+      "I had fun today.",
+      "Let's walk together.",
+      "Class is over now.",
       "See you later!"
     ],
     "answer": 3
@@ -1885,9 +1885,9 @@
     "prompt": "对方说的是：",
     "options": [
       "Goodbye!",
-      "Good morning!",
-      "Sorry!",
-      "Thank you!"
+      "I just got here.",
+      "Have a nice day!",
+      "I will miss you."
     ],
     "answer": 0,
     "heard": "Goodbye!",
@@ -1898,10 +1898,10 @@
     "tag": "道别",
     "prompt": "明天还要见面，想说：",
     "options": [
-      "Good night!",
+      "I had a great day.",
       "See you tomorrow!",
-      "Thank you!",
-      "Sorry!"
+      "Take care of yourself.",
+      "I will go home now."
     ],
     "answer": 1
   },
@@ -1910,10 +1910,10 @@
     "tag": "道别",
     "prompt": "对方说的是：",
     "options": [
-      "Good morning!",
-      "Sorry!",
+      "I just arrived here.",
+      "Have a good time!",
       "See you!",
-      "Thank you!"
+      "I will come back."
     ],
     "answer": 2,
     "heard": "See you!",
@@ -1924,9 +1924,9 @@
     "tag": "道别",
     "prompt": "假期结束要回校，跟家人说：",
     "options": [
-      "Good morning!",
-      "Thank you!",
-      "Sorry!",
+      "Please pass me the salt.",
+      "I forgot my pencil case.",
+      "Look at the snow outside.",
       "Bye, see you after school!"
     ],
     "answer": 3
@@ -1937,9 +1937,9 @@
     "prompt": "对方说的是：",
     "options": [
       "You too!",
-      "Good night!",
-      "Sorry!",
-      "No!"
+      "It's already noon.",
+      "Open your book.",
+      "Bring it to me."
     ],
     "answer": 0,
     "heard": "Have a nice day!",
@@ -1950,10 +1950,10 @@
     "tag": "道别",
     "prompt": "电话结束想礼貌挂断：",
     "options": [
-      "Hello again!",
+      "Please call me back.",
       "Goodbye, talk to you later!",
-      "Thank you!",
-      "Sorry!"
+      "Who is calling now?",
+      "The line is busy."
     ],
     "answer": 1
   },
@@ -1962,10 +1962,10 @@
     "tag": "道别",
     "prompt": "对方说的是：",
     "options": [
-      "Good morning!",
-      "Sorry!",
+      "I love this song.",
+      "Pass the book please.",
       "See you next week!",
-      "Thank you!"
+      "Open the window please."
     ],
     "answer": 2,
     "heard": "See you next week!",
@@ -1976,9 +1976,9 @@
     "tag": "道别",
     "prompt": "去同学家玩完要离开：",
     "options": [
-      "Good morning!",
-      "Thank you!",
-      "Sorry!",
+      "The cake tastes great.",
+      "I forgot my keys.",
+      "Pass me a tissue.",
       "I have to go now. Bye!"
     ],
     "answer": 3
@@ -1989,9 +1989,9 @@
     "prompt": "对方说的是：",
     "options": [
       "You too!",
-      "Not now.",
-      "Sorry!",
-      "No!"
+      "Bring some water.",
+      "Look at the bird.",
+      "Pass the paper."
     ],
     "answer": 0,
     "heard": "Take care!",
@@ -2002,10 +2002,10 @@
     "tag": "道别",
     "prompt": "夏令营结束跟新朋友道别：",
     "options": [
-      "Good morning!",
+      "I lost my hat.",
       "Keep in touch!",
-      "Thank you!",
-      "Sorry!"
+      "Please sit down.",
+      "Eat your dinner."
     ],
     "answer": 1
   },
@@ -2014,10 +2014,10 @@
     "tag": "道别",
     "prompt": "对方说的是：",
     "options": [
-      "Good morning!",
-      "Sorry!",
+      "I love this music.",
+      "Bring me a pen.",
       "Bye!",
-      "Thank you!"
+      "Open the door."
     ],
     "answer": 2,
     "heard": "Bye for now!",
@@ -2028,9 +2028,9 @@
     "tag": "情绪",
     "prompt": "今天得了满分，你想说：",
     "options": [
-      "I am sad.",
-      "Sad is good.",
-      "Good night!",
+      "I lost my pencil.",
+      "I broke a cup.",
+      "I'm late again.",
       "I'm so happy!"
     ],
     "answer": 3
@@ -2041,9 +2041,9 @@
     "prompt": "对方说的是：",
     "options": [
       "Don't worry.",
-      "Goodbye.",
-      "I am sad.",
-      "Good night!"
+      "The cake is sweet.",
+      "Pass me the book.",
+      "Look at the sky."
     ],
     "answer": 0,
     "heard": "I'm sad.",
@@ -2054,10 +2054,10 @@
     "tag": "情绪",
     "prompt": "跑完步很累，你想说：",
     "options": [
-      "I am happy.",
+      "I love running.",
       "I'm tired.",
-      "Happy is good.",
-      "Good morning!"
+      "I won the race.",
+      "I forgot my shoes."
     ],
     "answer": 1
   },
@@ -2066,10 +2066,10 @@
     "tag": "情绪",
     "prompt": "对方说的是：",
     "options": [
-      "Goodbye.",
-      "I am angry.",
+      "I like apples.",
+      "Open your book.",
       "Calm down, please.",
-      "Good night!"
+      "The sun is bright."
     ],
     "answer": 2,
     "heard": "I'm angry.",
@@ -2080,9 +2080,9 @@
     "tag": "情绪",
     "prompt": "收到惊喜礼物，你想说：",
     "options": [
-      "I am bored.",
-      "Bored is good.",
-      "Goodbye!",
+      "I lost the present.",
+      "Mum bought a gift.",
+      "I broke the box.",
       "I'm excited!"
     ],
     "answer": 3
@@ -2093,9 +2093,9 @@
     "prompt": "对方说的是：",
     "options": [
       "It's OK.",
-      "Goodbye.",
-      "I am scared.",
-      "Good night!"
+      "The water is cold.",
+      "Look at the clock.",
+      "I love this story."
     ],
     "answer": 0,
     "heard": "I'm scared.",
@@ -2106,10 +2106,10 @@
     "tag": "情绪",
     "prompt": "考试没考好，你想说：",
     "options": [
-      "I am happy.",
+      "I love the test.",
       "I'm a little sad.",
-      "Happy is good.",
-      "Good morning!"
+      "I got first place.",
+      "I forgot my pen."
     ],
     "answer": 1
   },
@@ -2118,10 +2118,10 @@
     "tag": "情绪",
     "prompt": "对方说的是：",
     "options": [
-      "Good night!",
-      "I am bored.",
+      "Open the window.",
+      "Bring me a cup.",
       "Let's play a game!",
-      "Goodbye!"
+      "Eat your apple."
     ],
     "answer": 2,
     "heard": "I'm bored.",
@@ -2132,9 +2132,9 @@
     "tag": "情绪",
     "prompt": "天气太热，你想说：",
     "options": [
-      "I am hot.",
-      "Hot is good.",
-      "Goodbye!",
+      "Bring an umbrella.",
+      "Look at the snow.",
+      "I love winter best.",
       "It's so hot!"
     ],
     "answer": 3
@@ -2145,9 +2145,9 @@
     "prompt": "对方说的是：",
     "options": [
       "Put on your coat.",
-      "Goodbye.",
-      "I am cold.",
-      "Good night!"
+      "Eat your lunch now.",
+      "Look at the moon.",
+      "Bring me water."
     ],
     "answer": 0,
     "heard": "I'm cold.",
@@ -2158,10 +2158,10 @@
     "tag": "情绪",
     "prompt": "看到可爱的小狗，你想说：",
     "options": [
-      "I am cute.",
+      "The cat is big.",
       "It's so cute!",
-      "Cute is good.",
-      "Good morning!"
+      "I lost my puppy.",
+      "Open the cage now."
     ],
     "answer": 1
   },
@@ -2170,10 +2170,10 @@
     "tag": "情绪",
     "prompt": "对方说的是：",
     "options": [
-      "Goodbye.",
-      "I am worried.",
+      "Bring me the bag.",
+      "Look at the bird.",
       "Don't worry.",
-      "Good night!"
+      "I love this story."
     ],
     "answer": 2,
     "heard": "I'm worried.",
@@ -2184,9 +2184,9 @@
     "tag": "情绪",
     "prompt": "外面下大雨，你想说：",
     "options": [
-      "I am rainy.",
-      "Rainy is good.",
-      "Goodbye!",
+      "I forgot my umbrella.",
+      "Let's go swimming now.",
+      "Look at the moon.",
       "It's rainy today."
     ],
     "answer": 3
@@ -2197,9 +2197,9 @@
     "prompt": "对方说的是：",
     "options": [
       "You should rest.",
-      "Goodbye.",
-      "I am well.",
-      "Good night!"
+      "Open your book now.",
+      "Eat your candy.",
+      "Bring me a chair."
     ],
     "answer": 0,
     "heard": "I'm not feeling well.",
@@ -2210,10 +2210,10 @@
     "tag": "情绪",
     "prompt": "下雪了很开心，你想说：",
     "options": [
-      "I am snow.",
+      "The rain is heavy.",
       "I'm so happy! It's snowing!",
-      "Snow is good.",
-      "Good morning!"
+      "I lost my gloves.",
+      "Bring my warm hat."
     ],
     "answer": 1
   },
@@ -2222,10 +2222,10 @@
     "tag": "情绪",
     "prompt": "对方说的是：",
     "options": [
-      "Good night!",
-      "Sorry!",
+      "Open the box now.",
+      "Bring me a book.",
       "Me too!",
-      "No!"
+      "Look at the cake."
     ],
     "answer": 2,
     "heard": "I'm surprised!",
@@ -2236,9 +2236,9 @@
     "tag": "情绪",
     "prompt": "等公交车等久了，你想说：",
     "options": [
-      "I am happy.",
-      "Happy is good.",
-      "Goodbye!",
+      "I love this bus.",
+      "I lost my ticket.",
+      "The bus is fast.",
       "I'm bored."
     ],
     "answer": 3
@@ -2249,9 +2249,9 @@
     "prompt": "对方说的是：",
     "options": [
       "Thank you!",
-      "Not now.",
-      "Maybe later.",
-      "I think not."
+      "Open the window.",
+      "Eat your snack.",
+      "Bring me my bag."
     ],
     "answer": 0,
     "heard": "I'm proud of you!",
@@ -2262,10 +2262,10 @@
     "tag": "情绪",
     "prompt": "外面风很大，你想说：",
     "options": [
-      "I am windy.",
+      "I lost my hat.",
       "It's windy.",
-      "Windy is good.",
-      "Good morning!"
+      "Look at the sun.",
+      "Bring me a kite."
     ],
     "answer": 1
   },
@@ -2274,10 +2274,10 @@
     "tag": "日常",
     "prompt": "想问这是什么颜色：",
     "options": [
-      "I am color.",
-      "Color is good.",
+      "I have a crayon.",
+      "Give me the red one.",
       "What color is it?",
-      "Good morning!"
+      "I like painting."
     ],
     "answer": 2
   },
@@ -2286,9 +2286,9 @@
     "tag": "日常",
     "prompt": "对方说的是：",
     "options": [
-      "I am blue.",
-      "Blue is good.",
-      "Good night!",
+      "I bought a new bag.",
+      "My bag is very big.",
+      "I left it at home.",
       "It's blue."
     ],
     "answer": 3,
@@ -2301,9 +2301,9 @@
     "prompt": "想数一数桌上有几本书：",
     "options": [
       "How many books are there?",
-      "I am books.",
-      "Books are good.",
-      "Goodbye!"
+      "I like reading books.",
+      "Give me a new book.",
+      "The books are heavy."
     ],
     "answer": 0
   },
@@ -2312,10 +2312,10 @@
     "tag": "日常",
     "prompt": "对方说的是：",
     "options": [
-      "I am three.",
+      "I want more apples.",
       "Three.",
-      "Three is good.",
-      "Good night!"
+      "Apples taste sweet.",
+      "Give me one apple."
     ],
     "answer": 1,
     "heard": "How many apples?",
@@ -2326,10 +2326,10 @@
     "tag": "日常",
     "prompt": "想问现在几点了：",
     "options": [
-      "I am time.",
-      "Time is good.",
+      "I need a new watch.",
+      "The clock is broken.",
       "What time is it?",
-      "Good morning!"
+      "I am late for class."
     ],
     "answer": 2
   },
@@ -2338,9 +2338,9 @@
     "tag": "日常",
     "prompt": "对方说的是：",
     "options": [
-      "Good night!",
-      "Sorry!",
-      "No!",
+      "I set an alarm.",
+      "The clock is fast.",
+      "I broke my watch.",
       "It's time for class."
     ],
     "answer": 3,
@@ -2353,9 +2353,9 @@
     "prompt": "在商店想问这个多少钱：",
     "options": [
       "How much is it?",
-      "I am much.",
-      "Much is good.",
-      "Goodbye!"
+      "I like this color.",
+      "Give me a big one.",
+      "The shop is closed."
     ],
     "answer": 0
   },
@@ -2364,10 +2364,10 @@
     "tag": "日常",
     "prompt": "对方说的是：",
     "options": [
-      "Good night!",
+      "That's too much.",
       "I'll take it.",
-      "Sorry!",
-      "No!"
+      "I left my wallet.",
+      "The shop is far."
     ],
     "answer": 1,
     "heard": "It's five yuan.",
@@ -2378,10 +2378,10 @@
     "tag": "日常",
     "prompt": "接电话时第一句话：",
     "options": [
-      "Goodbye!",
-      "Sorry!",
+      "Hang up the phone.",
+      "I missed your call.",
       "Hello?",
-      "Thank you!"
+      "My phone is broken."
     ],
     "answer": 2
   },
@@ -2390,9 +2390,9 @@
     "tag": "日常",
     "prompt": "对方说的是：",
     "options": [
-      "I am Tom.",
-      "Tom is good.",
-      "Good night!",
+      "I will tell Tom.",
+      "Tom is my friend.",
+      "Call me back later.",
       "He's not here."
     ],
     "answer": 3,
@@ -2405,9 +2405,9 @@
     "prompt": "同学生日，你想说：",
     "options": [
       "Happy birthday!",
-      "Good night!",
-      "Sorry!",
-      "Thank you!"
+      "I bought a new toy.",
+      "Let's eat some cake.",
+      "When is your party?"
     ],
     "answer": 0
   },
@@ -2416,10 +2416,10 @@
     "tag": "日常",
     "prompt": "对方说的是：",
     "options": [
-      "Hmm, no.",
+      "I forgot the date.",
       "Thank you!",
-      "Maybe later.",
-      "I think not."
+      "How old are you?",
+      "I like your cake."
     ],
     "answer": 1,
     "heard": "Happy birthday!",
@@ -2430,10 +2430,10 @@
     "tag": "日常",
     "prompt": "体育课想说自己会游泳：",
     "options": [
-      "I am swim.",
-      "Swim is good.",
+      "I like the pool.",
+      "The water is cold.",
       "I can swim.",
-      "Good morning!"
+      "Let's play football."
     ],
     "answer": 2
   },
@@ -2442,9 +2442,9 @@
     "tag": "日常",
     "prompt": "对方说的是：",
     "options": [
-      "No, goodbye.",
-      "I am run.",
-      "Good night!",
+      "I like running.",
+      "Let's run together.",
+      "Running is hard.",
       "Yes, I can."
     ],
     "answer": 3,
@@ -2457,9 +2457,9 @@
     "prompt": "找不到橡皮，你想说：",
     "options": [
       "Where is my eraser?",
-      "I am eraser.",
-      "Eraser is good.",
-      "Goodbye!"
+      "I need a new pencil.",
+      "The desk is too messy.",
+      "Give me your ruler."
     ],
     "answer": 0
   },
@@ -2468,10 +2468,10 @@
     "tag": "日常",
     "prompt": "对方说的是：",
     "options": [
-      "I am library.",
+      "I love reading books.",
       "It's on the first floor.",
-      "Library is good.",
-      "Good night!"
+      "The door is locked.",
+      "We have many books."
     ],
     "answer": 1,
     "heard": "Where is the library?",
@@ -2482,10 +2482,10 @@
     "tag": "日常",
     "prompt": "想告诉同学今天是星期一：",
     "options": [
-      "I am Monday.",
-      "Monday is good.",
+      "I don't like Mondays.",
+      "We have math today.",
       "It's Monday.",
-      "Good morning!"
+      "School starts early."
     ],
     "answer": 2
   },
@@ -2494,9 +2494,9 @@
     "tag": "日常",
     "prompt": "对方说的是：",
     "options": [
-      "I am Friday.",
-      "Friday is good.",
-      "Good night!",
+      "I love the weekend.",
+      "We have no class.",
+      "Tomorrow is Saturday.",
       "It's Friday."
     ],
     "answer": 3,
@@ -2509,9 +2509,9 @@
     "prompt": "天黑了，想开灯：",
     "options": [
       "Turn on the light, please.",
-      "I am light.",
-      "Light is good.",
-      "Goodbye!"
+      "I can see the stars.",
+      "Close the curtains now.",
+      "The room is very big."
     ],
     "answer": 0
   },
@@ -2520,10 +2520,10 @@
     "tag": "日常",
     "prompt": "对方说的是：",
     "options": [
-      "I am sunny.",
+      "I need my umbrella.",
       "It's sunny.",
-      "Sunny is good.",
-      "Good night!"
+      "Let's stay inside.",
+      "The cloud is white."
     ],
     "answer": 1,
     "heard": "Look at the sky!",
@@ -2534,10 +2534,10 @@
     "tag": "日常",
     "prompt": "过马路前想看有没有车：",
     "options": [
-      "I am ways.",
-      "Ways are good.",
+      "The car is very fast.",
+      "I see a red bus.",
       "Look both ways.",
-      "Good morning!"
+      "Hold my hand please."
     ],
     "answer": 2
   },
@@ -2546,9 +2546,9 @@
     "tag": "日常",
     "prompt": "对方说的是：",
     "options": [
-      "Good night!",
-      "Sorry!",
-      "No!",
+      "The light is yellow.",
+      "Wait for a moment.",
+      "I see many cars.",
       "Let's go."
     ],
     "answer": 3,
@@ -2561,9 +2561,9 @@
     "prompt": "想告诉妈妈你在学校：",
     "options": [
       "I'm at school.",
-      "I am school.",
-      "School is good.",
-      "Goodbye!"
+      "I like my teacher.",
+      "School ends at four.",
+      "I forgot my lunch."
     ],
     "answer": 0
   }
