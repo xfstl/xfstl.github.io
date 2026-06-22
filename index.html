@@ -119,6 +119,17 @@
             font-size: 0.85rem; color: #888; margin-bottom: 1rem; line-height: 1.5;
         }
 
+        .perfect-progress {
+            display: inline-block; padding: 0.4rem 0.95rem;
+            border-radius: 999px; font-size: 0.85rem; font-weight: 700;
+            background: #faf5ff; color: #9b30ff;
+            margin-bottom: 0.85rem; line-height: 1.4;
+        }
+        .perfect-progress.unlocked {
+            background: linear-gradient(135deg, #ffd43b, #ff922b);
+            color: #fff;
+        }
+
         .best-badge {
             display: inline-flex; align-items: center; gap: 0.35rem;
             background: linear-gradient(135deg, #fff9db, #ffe8cc);
@@ -477,6 +488,7 @@
             <div class="mascot">✨</div>
             <h1 class="title">Ziang的学习练习</h1>
             <p class="tagline">选一个科目，开始今天的练习吧 · 第3次满分可抽奖 🎡</p>
+            <p class="perfect-progress hidden" id="homePerfectProgress"></p>
 
             <p class="section-label">选择科目</p>
             <div class="subject-cards">
@@ -598,6 +610,7 @@
             <div class="new-record hidden" id="newRecord">🎉 新纪录！</div>
             <div class="encourage-emoji" id="encourageEmoji"></div>
             <p class="encourage-text" id="encourageText"></p>
+            <p class="perfect-progress hidden" id="resultPerfectProgress"></p>
             <p class="spin-invite hidden" id="spinInvite">🎡 今天第3次满分！点击抽取游戏时间</p>
             <button class="btn btn-accent hidden" id="openWheelBtn">转转盘 🎡</button>
             <div class="details" id="detailsList"></div>
@@ -1036,6 +1049,27 @@
             return data.perfectCountToday;
         }
 
+        function updatePerfectProgress() {
+            const data = normalizeDailyState(JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'));
+            const count = data.perfectCountToday || 0;
+            const els = [document.getElementById('homePerfectProgress'), document.getElementById('resultPerfectProgress')];
+            let text, unlocked;
+            if (count >= WHEEL_PERFECT_COUNT) {
+                text = '🎡 今天已解锁转盘！';
+                unlocked = true;
+            } else {
+                const remaining = WHEEL_PERFECT_COUNT - count;
+                text = `🌟 今天满分 ${count}/${WHEEL_PERFECT_COUNT} 次，再${remaining}次就能转盘了！`;
+                unlocked = false;
+            }
+            els.forEach(el => {
+                if (!el) return;
+                el.textContent = text;
+                el.classList.remove('hidden');
+                el.classList.toggle('unlocked', unlocked);
+            });
+        }
+
         function hasSpunWheelToday() {
             return getWheelData().date === getTodayKey();
         }
@@ -1422,15 +1456,17 @@
             if (navigator.vibrate) navigator.vibrate(type === 'correct' ? [30] : [20, 40, 20]);
         }
 
-        async function showFeedback(isCorrect) {
+        async function showFeedback(isCorrect, customText, holdMs) {
             if (usesTimer()) pauseTimer();
             const fb = document.getElementById('feedback');
             fb.className = 'feedback show ' + (isCorrect ? 'correct' : 'wrong');
             document.getElementById('feedbackEmoji').textContent = isCorrect ? '🎉' : '🌈';
-            document.getElementById('feedbackText').textContent = pick(isCorrect ? CORRECT_MSGS : WRONG_MSGS);
+            document.getElementById('feedbackText').textContent = customText || pick(isCorrect ? CORRECT_MSGS : WRONG_MSGS);
+            const duration = holdMs || 450;
+            fb.style.animationDuration = duration + 'ms';
             playTone(isCorrect ? 'correct' : 'wrong');
             vibrate(isCorrect ? 'correct' : 'wrong');
-            await new Promise(r => setTimeout(r, 450));
+            await new Promise(r => setTimeout(r, duration));
             if (usesTimer()) resumeTimer();
         }
 
@@ -1483,7 +1519,8 @@
                 streak = 0;
             }
 
-            await showFeedback(isCorrect);
+            const wrongMsg = isCorrect ? null : `正确答案是 ${questions[current].answer}（你写的：${userAns}）`;
+            await showFeedback(isCorrect, wrongMsg, isCorrect ? null : 2000);
 
             if (current < quizTotal - 1) {
                 current++;
@@ -1609,6 +1646,7 @@
             const showWheel = canOfferWheel(score, perfectCount);
             document.getElementById('spinInvite').classList.toggle('hidden', !showWheel);
             document.getElementById('openWheelBtn').classList.toggle('hidden', !showWheel);
+            updatePerfectProgress();
 
             if (isReview) {
                 document.getElementById('newRecord').classList.add('hidden');
@@ -1727,6 +1765,7 @@
         document.getElementById('wrongBtn').addEventListener('click', () => startQuiz(true));
         document.getElementById('homeBtn').addEventListener('click', () => {
             closeWheelOverlay();
+            updatePerfectProgress();
             switchScreen('home');
         });
         document.getElementById('quitBtn').addEventListener('click', () => {
@@ -1793,6 +1832,7 @@
         loadSettings();
         loadVersion();
         buildWheel();
+        updatePerfectProgress();
 
         const starsEl = document.getElementById('stars');
         for (let i = 0; i < 20; i++) {
