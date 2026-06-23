@@ -145,7 +145,7 @@
             display: flex; gap: 0.5rem; justify-content: center; margin-bottom: 1rem;
         }
         .chip {
-            flex: 1; max-width: 140px; padding: 0.65rem 0.5rem;
+            flex: 1; max-width: 140px; min-height: 44px; padding: 0.65rem 0.5rem;
             border: 2px solid #eee; border-radius: 14px; background: #fff;
             font-family: inherit; font-size: 0.9rem; font-weight: 600; color: #666;
             cursor: pointer; transition: all 0.2s;
@@ -289,8 +289,6 @@
             background: #fff9db; border-radius: 14px; padding: 0.85rem 1rem;
             font-size: 0.95rem; line-height: 1.75; color: #444; text-align: left;
             margin-bottom: 0.75rem; border-left: 4px solid #ffd43b;
-            max-height: min(40vh, 240px); overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
         }
         .reading-tag {
             display: inline-block; font-size: 0.72rem; font-weight: 700;
@@ -314,7 +312,7 @@
             margin-bottom: 0.75rem;
         }
         .choice-btn {
-            width: 100%; padding: 0.75rem 1rem; border: 2px solid #eee;
+            width: 100%; min-height: 52px; padding: 0.75rem 1rem; border: 2px solid #eee;
             border-radius: 14px; background: #fafafa; font-family: inherit;
             font-size: 0.95rem; font-weight: 600; color: #444; text-align: left;
             cursor: pointer; transition: all 0.15s;
@@ -487,6 +485,58 @@
         @media (max-width: 480px) {
             .screen { padding: 1.5rem 1rem; }
             .num-key { height: 48px; font-size: 1.3rem; }
+        }
+
+        /* iPad / 平板 */
+        @media (min-width: 768px) {
+            body {
+                padding: max(1.5rem, env(safe-area-inset-top)) max(1.5rem, env(safe-area-inset-right))
+                         max(1.5rem, env(safe-area-inset-bottom)) max(1.5rem, env(safe-area-inset-left));
+            }
+            .app { max-width: 640px; }
+            .screen { padding: 2.25rem 2rem; border-radius: 32px; }
+
+            .mascot { font-size: 4.25rem; }
+            .title { font-size: clamp(1.7rem, 4vw, 2.2rem); }
+            .tagline { font-size: 1.05rem; margin-bottom: 1rem; }
+            .stats-line, .perfect-progress { font-size: 0.95rem; }
+
+            .subject-card { padding: 1.25rem 1.35rem; gap: 1.1rem; border-radius: 22px; }
+            .subject-card-emoji { font-size: 2.5rem; }
+            .subject-card-name { font-size: 1.25rem; }
+            .subject-card-desc { font-size: 0.95rem; }
+            .subject-card-arrow { font-size: 1.5rem; }
+
+            .subject-title { font-size: clamp(1.6rem, 3.5vw, 2rem); }
+            .section-label { font-size: 0.95rem; }
+            .chip { font-size: 1rem; min-height: 50px; padding: 0.8rem 0.75rem; max-width: 180px; }
+            .btn { font-size: 1.1rem; min-height: 56px; padding: 1rem 1.75rem; max-width: 340px; }
+
+            .quiz-meta { font-size: 1rem; }
+            .question-box { min-height: 130px; }
+            .oral-equation { font-size: clamp(3rem, 8vw, 4rem); }
+            .reading-passage { font-size: 1.05rem; padding: 1.1rem 1.3rem; }
+            .choice-prompt { font-size: 1.2rem; }
+            .choice-prompt .en-line { font-size: 1.35rem; }
+            .choice-prompt .en-sub { font-size: 1.05rem; }
+            .choice-btn { font-size: 1.05rem; min-height: 60px; padding: 0.95rem 1.2rem; }
+            .btn-speak { font-size: 0.95rem; padding: 0.5rem 1rem; }
+
+            .answer-display { font-size: clamp(2.8rem, 9vw, 3.8rem); }
+            .numpad { max-width: 360px; gap: 0.65rem; margin-bottom: 1rem; }
+            .num-key { height: 64px; font-size: 1.7rem; border-radius: 16px; }
+            .num-key.action { font-size: 1.15rem; }
+            .num-key.submit { font-size: 1.1rem; }
+
+            .grade-val { font-size: 2.75rem; }
+            .grade-lbl { font-size: 0.95rem; }
+            .star-row { font-size: 2.1rem; }
+            .encourage-emoji { font-size: 2.75rem; }
+            .encourage-text { font-size: 1.1rem; }
+            .details { max-height: none; padding: 0.8rem; font-size: 0.95rem; }
+            .detail-item, .detail-summary { font-size: 0.95rem; }
+
+            .wheel-modal { max-width: 420px; padding: 2rem 1.75rem; }
         }
     </style>
 </head>
