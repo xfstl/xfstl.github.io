@@ -531,17 +531,12 @@
                 <p class="section-label">口算设置</p>
                 <div class="difficulty-row">
                     <button class="chip selected" data-level="20">二十以内</button>
-                    <button class="chip" data-level="50">五十以内</button>
                     <button class="chip" data-level="100">一百以内</button>
                 </div>
                 <div class="difficulty-row">
                     <button class="chip selected" data-mode="mix">加减混合</button>
                     <button class="chip" data-mode="add">加法</button>
                     <button class="chip" data-mode="sub">减法</button>
-                </div>
-                <div class="difficulty-row">
-                    <button class="chip" data-mode="carry">进位加</button>
-                    <button class="chip" data-mode="borrow">退位减</button>
                 </div>
             </div>
             <p class="subject-tip hidden" id="readingTip">100 篇短文 · 每次读 5 篇 · 不计时 · 优先未读</p>
@@ -1234,61 +1229,51 @@
             } catch { /* ignore */ }
         }
 
-        function pickIsAdd() {
-            if (quizMode === 'add' || quizMode === 'carry') return true;
-            if (quizMode === 'sub' || quizMode === 'borrow') return false;
-            return Math.random() < 0.5;
-        }
-
-        function genOnePair(strict) {
-            const cap = maxNum;
-            const isAdd = pickIsAdd();
-            let a, b;
-            if (isAdd) {
-                if (strict && (cap === 20 || cap === 50)) {
-                    a = rand(3, cap - 3);
-                    const minB = Math.max(3, 10 - a);
-                    const maxB = cap - a;
-                    if (minB > maxB) return null;
-                    b = rand(minB, maxB);
-                } else {
-                    a = rand(1, cap - 1);
-                    b = rand(1, cap - a);
-                }
-                if (strict && quizMode === 'carry' && (a % 10) + (b % 10) < 10) return null;
-            } else {
-                if (strict && (cap === 20 || cap === 50)) {
-                    a = rand(10, cap);
-                    b = rand(3, a - 1);
-                } else {
-                    a = rand(1, cap);
-                    b = rand(1, a);
-                }
-                if (strict && quizMode === 'borrow' && (a % 10) >= (b % 10)) return null;
-            }
-            const answer = isAdd ? a + b : a - b;
-            const expr = `${a} ${isAdd ? '+' : '-'} ${b}`;
-            return { a, b, isAdd, expr, answer };
-        }
-
         function generateQuestions() {
             const list = [], used = new Set();
+            const cap = maxNum;
             let attempts = 0;
-            const maxAttempts = quizTotal * 200;
+            const maxAttempts = quizTotal * 100;
 
             while (list.length < quizTotal && attempts < maxAttempts) {
                 attempts++;
-                const q = genOnePair(true);
-                if (!q) continue;
-                if (used.has(q.expr)) continue;
-                used.add(q.expr);
-                list.push({ ...q, userAnswer: null });
+                let isAdd;
+                if (quizMode === 'add') isAdd = true;
+                else if (quizMode === 'sub') isAdd = false;
+                else isAdd = Math.random() < 0.5;
+
+                let a, b, answer, expr;
+                if (isAdd) {
+                    a = rand(1, cap - 1);
+                    b = rand(1, cap - a);
+                    answer = a + b;
+                    expr = `${a} + ${b}`;
+                } else {
+                    a = rand(1, cap);
+                    b = rand(1, a);
+                    answer = a - b;
+                    expr = `${a} - ${b}`;
+                }
+                if (used.has(expr)) continue;
+                used.add(expr);
+                list.push({ a, b, isAdd, expr, answer, userAnswer: null });
             }
 
             while (list.length < quizTotal) {
-                const q = genOnePair(false);
-                if (!q) continue;
-                list.push({ ...q, userAnswer: null });
+                let isAdd = quizMode === 'sub' ? false : (quizMode === 'add' || Math.random() < 0.5);
+                let a, b, answer, expr;
+                if (isAdd) {
+                    a = rand(1, cap - 1);
+                    b = rand(1, cap - a);
+                    answer = a + b;
+                    expr = `${a} + ${b}`;
+                } else {
+                    a = rand(1, cap);
+                    b = rand(1, a);
+                    answer = a - b;
+                    expr = `${a} - ${b}`;
+                }
+                list.push({ a, b, isAdd, expr, answer, userAnswer: null });
             }
             return list;
         }
