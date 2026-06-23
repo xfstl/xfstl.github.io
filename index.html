@@ -413,6 +413,16 @@
         .detail-mark { font-size: 1.1rem; flex-shrink: 0; }
         .detail-mark.correct { color: #51cf66; }
         .detail-mark.wrong { color: #ff6b6b; }
+        .detail-item.wrong { background: #fff5f5; border-radius: 10px; border-bottom: none; }
+        .detail-summary {
+            display: flex; align-items: center; gap: 0.5rem;
+            padding: 0.55rem 0.6rem; font-size: 0.85rem; color: #51cf66;
+            font-weight: 600; background: #f0fff4; border-radius: 10px;
+            cursor: pointer; user-select: none;
+            opacity: 0; animation: detailIn 0.35s ease forwards; transform: translateX(-8px);
+        }
+        .detail-summary .toggle-arrow { margin-left: auto; transition: transform 0.25s ease; font-size: 0.9rem; color: #888; }
+        .detail-summary.expanded .toggle-arrow { transform: rotate(180deg); }
 
         .btn-group { display: flex; flex-direction: column; align-items: center; }
 
@@ -1287,9 +1297,32 @@
             if (subject === 'english') {
                 const bank = await loadEnglishBank();
                 if (!bank.length) return [];
-                return pickQuestionsSmart(bank, quizTotal, 'englishSeenIds', 'e');
+                const picked = pickQuestionsSmart(bank, quizTotal, 'englishSeenIds', 'e');
+                const sorted = sortByEnglishDifficulty(picked);
+                flushUnknownEnglishTagWarnings();
+                return sorted;
             }
             return generateQuestions();
+        }
+
+        const ENGLISH_DIFFICULTY = {
+            '问候': 1, '感谢': 1, '道别': 1,
+            '介绍': 2, '日常': 2,
+            '游戏': 3, '饮食': 3, '学校': 3, '请求': 3,
+            '情绪': 4,
+        };
+        const warnedEnglishTags = new Set();
+        function sortByEnglishDifficulty(list) {
+            return [...list].sort((a, b) => {
+                const da = ENGLISH_DIFFICULTY[a.tag] ?? (warnedEnglishTags.add(a.tag), 99);
+                const db = ENGLISH_DIFFICULTY[b.tag] ?? (warnedEnglishTags.add(b.tag), 99);
+                return da - db;
+            });
+        }
+        function flushUnknownEnglishTagWarnings() {
+            if (warnedEnglishTags.size === 0) return;
+            console.warn('[english] 未注册难度的 tag，已按最难处理:', [...warnedEnglishTags]);
+            warnedEnglishTags.clear();
         }
 
         function getEncouragement(score, timeMs) {
@@ -1674,7 +1707,7 @@
                 document.getElementById('newRecord').classList.add('hidden');
             }
 
-            document.getElementById('detailsList').innerHTML = questions.map((q, i) => {
+            const renderDetail = (q, quizIdx, renderIdx) => {
                 const mark = q.correct
                     ? '<span class="detail-mark correct">✓</span>'
                     : '<span class="detail-mark wrong">✗</span>';
@@ -1694,11 +1727,49 @@
                         ? `你的答案：${userText}`
                         : `你的答案：${userText} · 正确答案：${correctText}`;
                 }
-                return `<div class="detail-item" style="animation-delay:${i * 0.05}s">
-                    <span class="detail-num">${i + 1}</span>
+                const cls = q.correct ? 'detail-item' : 'detail-item wrong';
+                return `<div class="${cls}" style="animation-delay:${renderIdx * 0.05}s">
+                    <span class="detail-num">${quizIdx + 1}</span>
                     <div><div class="detail-q">${qLine}</div>
                     <div class="detail-ans">${ansLine}</div></div>${mark}</div>`;
-            }).join('');
+            };
+
+            const wrongItems = questions.map((q, i) => ({ q, i })).filter(x => !x.q.correct);
+            const correctItems = questions.map((q, i) => ({ q, i })).filter(x => x.q.correct);
+            const allCorrect = wrongItems.length === 0;
+
+            let html = '';
+            let renderIdx = 0;
+            wrongItems.forEach(({ q, i }) => {
+                html += renderDetail(q, i, renderIdx++);
+            });
+            if (correctItems.length > 0) {
+                if (allCorrect) {
+                    correctItems.forEach(({ q, i }) => {
+                        html += renderDetail(q, i, renderIdx++);
+                    });
+                } else {
+                    const summaryDelay = renderIdx * 0.05;
+                    const correctHtml = correctItems
+                        .map(({ q, i }, idx) => renderDetail(q, i, renderIdx + 1 + idx))
+                        .join('');
+                    html += `<div class="detail-summary" id="correctSummary" style="animation-delay:${summaryDelay}s">
+                        <span class="detail-mark correct">✓</span>
+                        <span>${correctItems.length} 题全对</span>
+                        <span class="toggle-arrow">▼</span>
+                    </div>
+                    <div class="detail-correct-list hidden" id="correctList">${correctHtml}</div>`;
+                }
+            }
+            document.getElementById('detailsList').innerHTML = html;
+
+            const summary = document.getElementById('correctSummary');
+            if (summary) {
+                summary.addEventListener('click', () => {
+                    summary.classList.toggle('expanded');
+                    document.getElementById('correctList').classList.toggle('hidden');
+                });
+            }
 
             if (score >= quizTotal * POINTS * 0.8) launchConfetti();
             if (isNewBest) playTone('start');
