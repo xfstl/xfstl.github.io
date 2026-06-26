@@ -538,7 +538,23 @@
 
             .wheel-modal { max-width: 420px; padding: 2rem 1.75rem; }
         }
+        /* Pinyin ruby annotation */
+        .reading-passage ruby { ruby-position: over; }
+        .reading-passage rt {
+            font-size: 0.55em; color: #e67700; font-weight: 400;
+            transition: opacity 0.2s ease;
+        }
+        .pinyin-hidden rt { opacity: 0; height: 0; overflow: hidden; display: block; font-size: 0; }
+        .btn-pinyin {
+            display: inline-flex; align-items: center; gap: 0.3rem;
+            border: none; background: #fff3bf; color: #e67700;
+            font-family: inherit; font-size: 0.85rem; font-weight: 700;
+            padding: 0.45rem 0.85rem; border-radius: 999px;
+            margin-bottom: 0.65rem; margin-left: 0.4rem; cursor: pointer;
+        }
+        .btn-pinyin:active { background: #ffe066; }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/pinyin-pro@3/dist/index.js"></script>
 </head>
 <body class="welcome-mode">
     <div class="app">
@@ -629,6 +645,7 @@
                 <div id="choiceQuestionUI" class="hidden">
                     <div class="reading-passage hidden" id="passageBox"></div>
                     <button type="button" class="btn-speak hidden" id="speakPassageBtn">🔊 朗读短文</button>
+                    <button type="button" class="btn-pinyin hidden" id="pinyinToggleBtn">📖 看拼音</button>
                     <div class="choice-prompt" id="choicePrompt"></div>
                     <button type="button" class="btn-speak hidden" id="speakPromptBtn">🔊 听对方说</button>
                     <div class="choice-grid" id="choiceGrid"></div>
@@ -725,6 +742,35 @@
             { label: '20分钟', minutes: 20, color: '#51cf66' },
         ];
         const WHEEL_PERFECT_COUNT = 3;
+
+        /* ===== Pinyin toggle ===== */
+        let pinyinVisible = localStorage.getItem('pinyinVisible') === 'true';
+
+        function addPinyinRuby(text) {
+            if (typeof pinyinPro === 'undefined') return text;
+            const pinyins = pinyinPro.pinyin(text, { type: 'array' });
+            let result = '';
+            let pi = 0;
+            for (let i = 0; i < text.length; i++) {
+                const ch = text[i];
+                if (/[\u4e00-\u9fff]/.test(ch)) {
+                    result += `<ruby>${ch}<rt>${pinyins[pi]}</rt></ruby>`;
+                } else {
+                    result += ch;
+                }
+                pi++;
+            }
+            return result;
+        }
+
+        function applyPinyinVisibility() {
+            const el = document.getElementById('passageBox');
+            if (!el) return;
+            el.classList.toggle('pinyin-hidden', !pinyinVisible);
+            const btn = document.getElementById('pinyinToggleBtn');
+            btn.textContent = pinyinVisible ? '🙈 隐藏拼音' : '📖 看拼音';
+        }
+        /* ===== End Pinyin ===== */
 
         const SUBJECTS = {
             math: { id: 'math', name: '口算', title: '口算练习', emoji: '⚡', startLabel: '开始口算 ⚡', progress: '口算' },
@@ -1487,14 +1533,17 @@
                 resetSpeakPassageBtn();
                 if (q.passage) {
                     const tagHtml = q.tag ? `<span class="reading-tag">${q.tag}</span>` : '';
-                    passageEl.innerHTML = tagHtml + q.passage;
+                    passageEl.innerHTML = tagHtml + addPinyinRuby(q.passage);
                     passageEl.classList.remove('hidden');
+                    applyPinyinVisibility();
                     speakPassageBtn.dataset.text = q.passage;
                     speakPassageBtn.classList.remove('hidden');
+                    document.getElementById('pinyinToggleBtn').classList.toggle('hidden', subject !== 'reading');
                 } else {
                     passageEl.classList.add('hidden');
                     speakPassageBtn.classList.add('hidden');
                     speakPassageBtn.dataset.text = '';
+                    document.getElementById('pinyinToggleBtn').classList.add('hidden');
                 }
                 const promptEl = document.getElementById('choicePrompt');
                 const speakPromptBtn = document.getElementById('speakPromptBtn');
@@ -1907,6 +1956,13 @@
                 btn.textContent = '⏹ 停止朗读';
                 btn.dataset.speaking = '1';
             }
+        });
+
+        /* Pinyin toggle button */
+        document.getElementById('pinyinToggleBtn').addEventListener('click', () => {
+            pinyinVisible = !pinyinVisible;
+            localStorage.setItem('pinyinVisible', pinyinVisible);
+            applyPinyinVisibility();
         });
 
         document.getElementById('startBtn').addEventListener('click', async () => {
