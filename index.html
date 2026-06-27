@@ -538,21 +538,27 @@
 
             .wheel-modal { max-width: 420px; padding: 2rem 1.75rem; }
         }
-        /* Pinyin ruby annotation */
-        .reading-passage ruby { ruby-position: over; }
-        .reading-passage rt {
-            font-size: 0.55em; color: #e67700; font-weight: 400;
-            transition: opacity 0.2s ease;
+        /* Pinyin tap-to-reveal */
+        .reading-passage .py-char {
+            position: relative; cursor: pointer;
+            border-radius: 3px; transition: background 0.15s;
         }
-        .pinyin-hidden rt { opacity: 0; height: 0; overflow: hidden; display: block; font-size: 0; }
-        .btn-pinyin {
-            display: inline-flex; align-items: center; gap: 0.3rem;
-            border: none; background: #fff3bf; color: #e67700;
-            font-family: inherit; font-size: 0.85rem; font-weight: 700;
-            padding: 0.45rem 0.85rem; border-radius: 999px;
-            margin-bottom: 0.65rem; margin-left: 0.4rem; cursor: pointer;
+        .reading-passage .py-char:active { background: #fff3bf; }
+        .reading-passage .py-char .py-tip {
+            position: absolute; left: 50%; bottom: 100%;
+            transform: translateX(-50%); pointer-events: none;
+            font-size: 0.7rem; color: #e67700; font-weight: 700;
+            background: #fff9db; border: 1px solid #ffd43b; border-radius: 6px;
+            padding: 0.15rem 0.4rem; white-space: nowrap;
+            opacity: 0; transition: opacity 0.2s;
+            z-index: 10;
         }
-        .btn-pinyin:active { background: #ffe066; }
+        .reading-passage .py-char.py-show { background: #fff3bf; }
+        .reading-passage .py-char.py-show > .py-tip { opacity: 1 !important; }
+        .pinyin-hint {
+            font-size: 0.72rem; color: #aaa; text-align: center;
+            margin-top: 0.3rem; margin-bottom: 0.4rem;
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/pinyin-pro@3/dist/index.js"></script>
 </head>
@@ -645,7 +651,7 @@
                 <div id="choiceQuestionUI" class="hidden">
                     <div class="reading-passage hidden" id="passageBox"></div>
                     <button type="button" class="btn-speak hidden" id="speakPassageBtn">🔊 朗读短文</button>
-                    <button type="button" class="btn-pinyin hidden" id="pinyinToggleBtn">📖 看拼音</button>
+                    <div class="pinyin-hint hidden" id="pinyinHint">👆 点不认识的字看拼音</div>
                     <div class="choice-prompt" id="choicePrompt"></div>
                     <button type="button" class="btn-speak hidden" id="speakPromptBtn">🔊 听对方说</button>
                     <div class="choice-grid" id="choiceGrid"></div>
@@ -743,10 +749,10 @@
         ];
         const WHEEL_PERFECT_COUNT = 3;
 
-        /* ===== Pinyin toggle ===== */
-        let pinyinVisible = localStorage.getItem('pinyinVisible') === 'true';
+        /* ===== Pinyin tap-to-reveal ===== */
+        let pinyinTimer = null;
 
-        function addPinyinRuby(text) {
+        function addPinyinSpans(text) {
             if (typeof pinyinPro === 'undefined') return text;
             const pinyins = pinyinPro.pinyin(text, { type: 'array' });
             let result = '';
@@ -754,7 +760,7 @@
             for (let i = 0; i < text.length; i++) {
                 const ch = text[i];
                 if (/[\u4e00-\u9fff]/.test(ch)) {
-                    result += `<ruby>${ch}<rt>${pinyins[pi]}</rt></ruby>`;
+                    result += `<span class="py-char" data-py="${pinyins[pi]}">${ch}<span class="py-tip">${pinyins[pi]}</span></span>`;
                 } else {
                     result += ch;
                 }
@@ -763,12 +769,34 @@
             return result;
         }
 
-        function applyPinyinVisibility() {
-            const el = document.getElementById('passageBox');
-            if (!el) return;
-            el.classList.toggle('pinyin-hidden', !pinyinVisible);
-            const btn = document.getElementById('pinyinToggleBtn');
-            btn.textContent = pinyinVisible ? '🙈 隐藏拼音' : '📖 看拼音';
+        function initPinyinTap() {
+            const box = document.getElementById('passageBox');
+            if (!box) return;
+            box.addEventListener('click', (e) => {
+                const charEl = e.target.closest('.py-char');
+                // 点击非汉字区域，清除已显示的
+                if (!charEl) {
+                    clearPinyinShow();
+                    return;
+                }
+                // 如果点的是已经显示的那个字，则关闭
+                if (charEl.classList.contains('py-show')) {
+                    clearPinyinShow();
+                    return;
+                }
+                clearPinyinShow();
+                void charEl.offsetWidth; // force reflow for transition
+                charEl.classList.add('py-show');
+                clearTimeout(pinyinTimer);
+                pinyinTimer = setTimeout(() => {
+                    charEl.classList.remove('py-show');
+                }, 2000);
+            });
+        }
+
+        function clearPinyinShow() {
+            clearTimeout(pinyinTimer);
+            document.querySelectorAll('.py-char.py-show').forEach(el => el.classList.remove('py-show'));
         }
         /* ===== End Pinyin ===== */
 
@@ -1533,17 +1561,16 @@
                 resetSpeakPassageBtn();
                 if (q.passage) {
                     const tagHtml = q.tag ? `<span class="reading-tag">${q.tag}</span>` : '';
-                    passageEl.innerHTML = tagHtml + addPinyinRuby(q.passage);
+                    passageEl.innerHTML = tagHtml + (subject === 'reading' ? addPinyinSpans(q.passage) : q.passage);
                     passageEl.classList.remove('hidden');
-                    applyPinyinVisibility();
                     speakPassageBtn.dataset.text = q.passage;
                     speakPassageBtn.classList.remove('hidden');
-                    document.getElementById('pinyinToggleBtn').classList.toggle('hidden', subject !== 'reading');
+                    document.getElementById('pinyinHint').classList.toggle('hidden', subject !== 'reading');
                 } else {
                     passageEl.classList.add('hidden');
                     speakPassageBtn.classList.add('hidden');
                     speakPassageBtn.dataset.text = '';
-                    document.getElementById('pinyinToggleBtn').classList.add('hidden');
+                    document.getElementById('pinyinHint').classList.add('hidden');
                 }
                 const promptEl = document.getElementById('choicePrompt');
                 const speakPromptBtn = document.getElementById('speakPromptBtn');
@@ -1958,12 +1985,8 @@
             }
         });
 
-        /* Pinyin toggle button */
-        document.getElementById('pinyinToggleBtn').addEventListener('click', () => {
-            pinyinVisible = !pinyinVisible;
-            localStorage.setItem('pinyinVisible', pinyinVisible);
-            applyPinyinVisibility();
-        });
+        /* Pinyin tap-to-reveal init */
+        initPinyinTap();
 
         document.getElementById('startBtn').addEventListener('click', async () => {
             playTone('start');
